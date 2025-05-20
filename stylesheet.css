@@ -1,0 +1,365 @@
+/* -------- 共通 -------- */
+
+body {
+  width: 500px;
+  margin: 0 auto;
+  background-color: rgb(20, 20, 20);
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+}
+
+/* form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background-color: rgb(25, 25, 25);
+  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+} */
+
+h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 300;
+  color: white;
+}
+
+button {
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 0.3;
+  animation: fadeIn 0.3s ease-out forwards;
+  z-index: 1000;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+/* -------- 投稿作成・表示変更 -------- */
+
+#operationArea {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+}
+
+#operationArea button {
+  padding: 30px 5px;
+  background-color: black;
+}
+
+#operationArea button svg {
+  transition: transform 0.3s ease;
+}
+
+#operationArea button:hover svg {
+  transform: scale(1.33);
+}
+
+.postForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background-color: rgb(25, 25, 25);
+  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+}
+
+.postForm input,
+.postForm textarea {
+  margin-bottom: 3px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.postForm input {
+  width: 400px;
+  height: 50px;
+}
+
+.postForm textarea {
+  width: 402px;
+  height: 150px;
+}
+
+.postForm button {
+  margin-top: 10px;
+  width: 60px;
+  height: 40px;
+}
+
+.filterForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background-color: rgb(25, 25, 25);
+  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+}
+
+.filterInput {
+  width: 200px;
+  height: 50px;
+}
+
+.filterButton {
+  margin-left: 3px;
+  width: 70px;
+  height: 40px;
+}
+
+.showAll {
+  display: none;
+}
+
+.sortForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background-color: rgb(25, 25, 25);
+  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+}
+
+.sortArea {
+  display: flex;
+}
+
+.sortUserIdArea,
+.sortPostingTimeArea {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.sortForm button {
+  width: 150px;
+  height: 40px;
+}
+
+/* -------- 投稿UI -------- */
+
+#posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  margin: 190px 0;
+  padding: 70px 110px;
+  background-color: rgb(27, 27, 27);
+  box-shadow: 1px 0 11px 0 rgb(165, 165, 165);
+}
+
+.newPost {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.newPost.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.box {
+  position: relative;
+  border-top: 10px solid rgb(235, 235, 235);
+  border-bottom: 10px solid rgb(235, 235, 235);
+  border-radius: 48%;
+}
+
+.userInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userName {
+  color: rgb(142, 142, 142);
+}
+
+.userId {
+  color: rgb(60, 60, 60);
+}
+
+.title,
+.mainText {
+  overflow-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.title {
+  margin: 20px auto 0 auto;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+}
+
+.mainText {
+  margin: 30px auto;
+  font-weight: 400;
+  color: white;
+  line-height: 28px;
+}
+
+.template {
+  display: none;
+}
+
+#buttonContainer {
+  display: flex;
+  margin-top: 10px;
+}
+
+.likeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  height: 45px;
+  transition: 0.5s;
+}
+
+.likeButton:hover .heart {
+  fill: rgb(245, 51, 84);
+}
+
+.heart {
+  padding: 0;
+  transition: 0.3s;
+}
+
+.valueLikes {
+  padding: 0 5px;
+  margin: 0;
+}
+
+.deleteButton,
+.editButton {
+  display: none;
+  width: 70px;
+  height: 45px;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background-color: rgb(25, 25, 25);
+  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+}
+
+.editTitle,
+.editMainText {
+  background-color: white;
+  width: 90px;
+  margin: 0;
+  text-align: center;
+}
+
+.newTitle {
+  margin-bottom: 10px;
+  width: 400px;
+  height: 70px;
+}
+.newMainText {
+  width: 400px;
+  height: 200px;
+}
+
+.confirmBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 30px 30px 30px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 0 15px 0 rgb(180, 180, 180);
+}
+
+.confirmButtons button {
+  width: 100px;
+  margin: 20px;
+}
+
+.dateArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  color: rgb(60, 60, 60);
+  letter-spacing: 1px;
+}
+
+.dateArea div {
+  margin: 0 5px;
+}
+
+.dateArea p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.edited {
+  display: none;
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  width: 80%;
+  font-weight: 300;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.char {
+  color: white;
+}

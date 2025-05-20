@@ -1,0 +1,15 @@
+{
+  "folders": [
+	{
+		"name": "step4",
+		"path": ".."
+	},
+	{
+		"name": "post-app-main",
+		"path": "../../../../Downloads/post-app-main"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "step4"
+  }
+}
