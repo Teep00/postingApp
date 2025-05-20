@@ -15,16 +15,6 @@ textarea {
   font-weight: 600;
 }
 
-/* form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-  background-color: rgb(25, 25, 25);
-  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
-} */
-
 h2 {
   margin-top: 0;
   text-align: center;
@@ -130,7 +120,7 @@ button {
 }
 
 .filterButton {
-  margin-left: 3px;
+  margin-top: 20px;
   width: 70px;
   height: 40px;
 }

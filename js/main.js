@@ -1,9 +1,18 @@
 // インポート
-import { newPostCreate } from './createPost.js';
-import { handleFilter } from './filter.js';
-import { handleSort } from './sort.js';
-import { fetchInitialPosts, incrementUserId, getUserId } from './postUtils.js';
-import { filter, showAll, sort, newPostCreateBtn } from './domElementList.js';
+import { newPostCreate } from './components/createPost.js';
+import { handleFilter } from './components/filter.js';
+import { handleSort } from './components/sort.js';
+import {
+  fetchInitialPosts,
+  incrementUserId,
+  getUserId,
+} from './components/postUtils.js';
+import {
+  filter,
+  showAll,
+  sort,
+  newPostCreateBtn,
+} from './utils/domElementList.js';
 
 // 初期投稿取得
 window.addEventListener('DOMContentLoaded', () => {

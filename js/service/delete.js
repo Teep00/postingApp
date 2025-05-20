@@ -1,5 +1,5 @@
 // インポート
-import { createOverlayWithContent } from './overlay.js';
+import { createOverlayWithContent } from '../components/overlay.js';
 
 // 削除ボタン
 export function handleDelete(postElement, id) {

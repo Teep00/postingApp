@@ -1,6 +1,6 @@
 import { createOverlayWithContent, clickedOverlay } from './overlay.js';
-import { charLimit } from './charLimit.js';
-import { enterKeyDown } from './keyEvent.js';
+import { charLimit } from '../utils/charLimit.js';
+import { enterKeyDown } from '../utils/keyEvent.js';
 import { createPostElement } from './postUtils.js';
 
 // 新規投稿作成

@@ -1,8 +1,11 @@
 // インポート
-import { createOverlayWithContent, clickedOverlay } from './overlay.js';
-import { charLimit } from './charLimit.js';
-import { enterKeyDown } from './keyEvent.js';
-import { currentDate } from './time.js';
+import {
+  createOverlayWithContent,
+  clickedOverlay,
+} from '../components/overlay.js';
+import { charLimit } from '../utils/charLimit.js';
+import { enterKeyDown } from '../utils/keyEvent.js';
+import { currentDate } from '../utils/time.js';
 
 // 編集ボタン
 export function handleEdit(postElement, { id, userId }) {

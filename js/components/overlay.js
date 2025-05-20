@@ -2,9 +2,6 @@
 export function overlay() {
   const overlay = document.createElement('div');
   overlay.classList.add('overlay');
-  // overlay.addEventListener('click', (e) => {
-  //   if (e.target === overlay) overlay.remove();
-  // });
   document.body.appendChild(overlay);
   return overlay;
 }

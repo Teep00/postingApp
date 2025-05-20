@@ -1,11 +1,11 @@
 // インポート
 import { newPostCreate } from './createPost.js';
-import { currentDate } from './time.js';
-import { handleDelete } from './delete.js';
-import { handleEdit } from './edit.js';
-import { handleLike } from './like.js';
-import { fadeInObserver } from './fadeInObserver.js';
-import { postTemplate, newPostCreateBtn } from './domElementList.js';
+import { currentDate } from '../utils/time.js';
+import { handleDelete } from '../service/delete.js';
+import { handleEdit } from '../service/edit.js';
+import { handleLike } from '../service/like.js';
+import { fadeInObserver } from '../utils/fadeInObserver.js';
+import { postTemplate, newPostCreateBtn } from '../utils/domElementList.js';
 
 // userIdの管理
 let nextUserId = 1;

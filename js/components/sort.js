@@ -4,7 +4,7 @@ import {
   createOverlayWithContent,
   clickedOverlay,
 } from './overlay.js';
-import { getAllPosts } from './allPost.js';
+import { getAllPosts } from '../utils/allPost.js';
 
 // 並び替え
 export function handleSort(sort) {
