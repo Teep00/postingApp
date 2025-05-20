@@ -1,6 +1,6 @@
 import { createOverlayWithContent, clickedOverlay } from './overlay.js';
 import { charLimit } from '../utils/charLimit.js';
-import { enterKeyDown } from '../utils/keyEvent.js';
+import { enterSubmit } from '../utils/keyEvent.js';
 import { createPostElement } from './postUtils.js';
 
 // 新規投稿作成
@@ -45,11 +45,11 @@ export function newPostCreate(newPostCreateBtn, incrementUserId, getUserId) {
       submitBtn
     );
 
-    enterKeyDown(postForm, submitBtn);
-
     postForm.addEventListener('submit', (e) => {
       e.preventDefault();
       if (submitBtn.disabled) return;
+
+      enterSubmit(postForm, submitBtn);
 
       const title = titleInput.value.trim();
       const body = mainTextInput.value.trim();

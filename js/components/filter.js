@@ -1,7 +1,7 @@
 // インポート
 import { createOverlayWithContent, clickedOverlay } from './overlay.js';
 import { getAllPosts } from '../utils/allPost.js';
-import { enterKeyDown } from '../utils/keyEvent.js';
+import { enterSubmit } from '../utils/keyEvent.js';
 
 // フィルター
 
@@ -21,7 +21,7 @@ export function handleFilter(filter, showAll) {
     filterButton.addEventListener('click', (e) => {
       e.preventDefault();
 
-      enterKeyDown(filterForm, filterButton);
+      enterClick(filterForm, filterButton);
 
       const inputValue = parseInt(
         filterForm.querySelector('.filterInput').value

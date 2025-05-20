@@ -4,7 +4,7 @@ import {
   clickedOverlay,
 } from '../components/overlay.js';
 import { charLimit } from '../utils/charLimit.js';
-import { enterKeyDown } from '../utils/keyEvent.js';
+import { enterSubmit } from '../utils/keyEvent.js';
 import { currentDate } from '../utils/time.js';
 
 // 編集ボタン
@@ -52,11 +52,11 @@ export function handleEdit(postElement, { id, userId }) {
     submitBtn
   );
 
-  enterKeyDown(editForm, submitBtn);
-
   editForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (submitBtn.disabled) return;
+
+    enterSubmit(editForm, submitBtn);
 
     const newTitle = editForm.querySelector('.newTitle').value.trim() || title;
     const newMainText =
