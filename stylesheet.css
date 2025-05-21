@@ -47,7 +47,10 @@ button {
     opacity: 1;
   }
 }
-/* -------- 投稿作成・表示変更 -------- */
+
+/* ------------------ サイドボタン ------------------ */
+
+/* -------- サイドボタンエリア -------- */
 
 #operationArea {
   position: fixed;
@@ -70,6 +73,8 @@ button {
 #operationArea button:hover svg {
   transform: scale(1.33);
 }
+
+/* -------- 新規投稿 フォーム -------- */
 
 .postForm {
   display: flex;
@@ -104,30 +109,13 @@ button {
   height: 40px;
 }
 
-.filterForm {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-  background-color: rgb(25, 25, 25);
-  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+/* ↓新規投稿・投稿編集時に使用↓ */
+.char {
+  color: white;
 }
+/* ------------------------ */
 
-.filterInput {
-  width: 200px;
-  height: 50px;
-}
-
-.filterButton {
-  margin-top: 20px;
-  width: 70px;
-  height: 40px;
-}
-
-.showAll {
-  display: none;
-}
+/* -------- 投稿並べ替え フォーム -------- */
 
 .sortForm {
   display: flex;
@@ -155,7 +143,36 @@ button {
   height: 40px;
 }
 
-/* -------- 投稿UI -------- */
+/* -------- 投稿絞り込み フォーム -------- */
+
+.filterForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background-color: rgb(25, 25, 25);
+  box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+}
+
+.filterInput {
+  width: 200px;
+  height: 50px;
+}
+
+.filterButton {
+  margin-top: 20px;
+  width: 70px;
+  height: 40px;
+}
+
+.showAll {
+  display: none;
+}
+
+/* ------------------ 投稿のデザイン ------------------ */
+
+/* -------- フレーム・全体的なパーツの配置 -------- */
 
 #posts {
   display: flex;
@@ -171,6 +188,10 @@ button {
   padding: 70px 110px;
   background-color: rgb(27, 27, 27);
   box-shadow: 1px 0 11px 0 rgb(165, 165, 165);
+}
+
+.template {
+  display: none;
 }
 
 .newPost {
@@ -195,6 +216,8 @@ button {
   border-radius: 48%;
 }
 
+/* -------- ユーザーネーム・ユーザーID -------- */
+
 .userInfo {
   display: flex;
   justify-content: space-between;
@@ -208,6 +231,8 @@ button {
 .userId {
   color: rgb(60, 60, 60);
 }
+
+/* -------- タイトル・メインテキスト -------- */
 
 .title,
 .mainText {
@@ -231,14 +256,26 @@ button {
   line-height: 28px;
 }
 
-.template {
-  display: none;
+/* -------- 新規投稿 -------- */
+
+.newTitle {
+  margin-bottom: 10px;
+  width: 400px;
+  height: 70px;
 }
+.newMainText {
+  width: 400px;
+  height: 200px;
+}
+
+/* -------- 投稿内ボタンエリア -------- */
 
 #buttonContainer {
   display: flex;
   margin-top: 10px;
 }
+
+/* -------- いいねボタン -------- */
 
 .likeButton {
   display: flex;
@@ -263,12 +300,16 @@ button {
   margin: 0;
 }
 
+/* -------- 編集・削除ボタン -------- */
+
 .deleteButton,
 .editButton {
   display: none;
   width: 70px;
   height: 45px;
 }
+
+/* -------- 編集ボタン -------- */
 
 .editForm {
   display: flex;
@@ -288,30 +329,11 @@ button {
   text-align: center;
 }
 
-.newTitle {
-  margin-bottom: 10px;
-  width: 400px;
-  height: 70px;
-}
-.newMainText {
-  width: 400px;
-  height: 200px;
+.edited {
+  display: none;
 }
 
-.confirmBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 30px 30px 30px;
-  color: rgb(0, 0, 0);
-  background-color: rgb(230, 230, 230);
-  box-shadow: 1px 0 15px 0 rgb(180, 180, 180);
-}
-
-.confirmButtons button {
-  width: 100px;
-  margin: 20px;
-}
+/* -------- 削除ボタン -------- */
 
 .dateArea {
   display: flex;
@@ -331,8 +353,19 @@ button {
   font-size: 14px;
 }
 
-.edited {
-  display: none;
+.confirmBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 30px 30px 30px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 0 15px 0 rgb(180, 180, 180);
+}
+
+.confirmButtons button {
+  width: 100px;
+  margin: 20px;
 }
 
 .errorContainer {
@@ -348,8 +381,4 @@ button {
   color: red;
   font-size: 15px;
   font-weight: 300;
-}
-
-.char {
-  color: white;
 }
