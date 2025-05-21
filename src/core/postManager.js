@@ -1,9 +1,9 @@
 // インポート
-import { newPostCreate } from './createPost.js';
+import { newPostCreate } from '../modules/createPost.js';
 import { currentDate } from '../utils/time.js';
-import { handleDelete } from '../service/delete.js';
-import { handleEdit } from '../service/edit.js';
-import { handleLike } from '../service/like.js';
+import { handleDelete } from '../modules/delete.js';
+import { handleEdit } from '../modules/edit.js';
+import { handleLike } from '../modules/like.js';
 import { fadeInObserver } from '../utils/fadeInObserver.js';
 import { postTemplate, newPostCreateBtn } from '../utils/domElementList.js';
 

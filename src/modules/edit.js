@@ -1,8 +1,5 @@
 // インポート
-import {
-  createOverlayWithContent,
-  clickedOverlay,
-} from '../components/overlay.js';
+import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { charLimit } from '../utils/charLimit.js';
 import { enterSubmit } from '../utils/keyEvent.js';
 import { currentDate } from '../utils/time.js';

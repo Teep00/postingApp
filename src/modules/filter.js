@@ -1,5 +1,5 @@
 // インポート
-import { createOverlayWithContent, clickedOverlay } from './overlay.js';
+import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { getAllPosts } from '../utils/allPost.js';
 import { enterSubmit } from '../utils/keyEvent.js';
 

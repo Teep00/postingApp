@@ -1,7 +1,7 @@
-import { createOverlayWithContent, clickedOverlay } from './overlay.js';
+import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { charLimit } from '../utils/charLimit.js';
 import { enterSubmit } from '../utils/keyEvent.js';
-import { createPostElement } from './postUtils.js';
+import { createPostElement } from '../core/postManager.js';
 
 // 新規投稿作成
 export function newPostCreate(newPostCreateBtn, incrementUserId, getUserId) {

@@ -1,12 +1,12 @@
 // インポート
-import { newPostCreate } from './components/createPost.js';
-import { handleFilter } from './components/filter.js';
-import { handleSort } from './components/sort.js';
+import { newPostCreate } from './modules/createPost.js';
+import { handleFilter } from './modules/filter.js';
+import { handleSort } from './modules/sort.js';
 import {
   fetchInitialPosts,
   incrementUserId,
   getUserId,
-} from './components/postUtils.js';
+} from './core/postManager.js';
 import {
   filter,
   showAll,
