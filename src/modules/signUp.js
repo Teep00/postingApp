@@ -6,7 +6,7 @@ export function handleSignUp(signUpBtn) {
     signUpForm.innerHTML = `
     <h2>新規登録</h2>
     <div>
-      <p>メールアドレス</p>
+      <p>ユーザーID</p>
       <input type="text">
     </div>
     <div>

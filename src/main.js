@@ -4,11 +4,7 @@ import { handleFilter } from './modules/filter.js';
 import { handleSort } from './modules/sort.js';
 import { handleSignUp } from './modules/signUp.js';
 import { handleLogin } from './modules/login.js';
-import {
-  fetchInitialPosts,
-  incrementUserId,
-  getUserId,
-} from './core/postManager.js';
+import { fetchInitialPosts } from './core/postManager.js';
 import {
   filter,
   showAll,
@@ -24,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // 新規投稿作成
-newPostCreate(newPostCreateBtn, incrementUserId, getUserId);
+newPostCreate(newPostCreateBtn);
 
 // フィルター
 handleFilter(filter, showAll);

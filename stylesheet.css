@@ -226,11 +226,9 @@ button {
 }
 
 .userName {
+  margin: 12px auto;
   color: rgb(142, 142, 142);
-}
-
-.userId {
-  color: rgb(60, 60, 60);
+  font-size: 18px;
 }
 
 /* -------- タイトル・メインテキスト -------- */
@@ -244,7 +242,6 @@ button {
 
 .title {
   margin: 20px auto 0 auto;
-  text-align: center;
   font-size: 24px;
   font-weight: 800;
   color: white;

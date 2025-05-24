@@ -6,7 +6,7 @@ export function handleLogin(loginBtn) {
     loginForm.innerHTML = `
     <h2>ログイン</h2>
     <div>
-      <p>メールアドレス</p>
+      <p>ユーザーID</p>
       <input type="text"/>
     </div>
     <div>

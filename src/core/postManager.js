@@ -4,16 +4,7 @@ import { handleDelete } from '../modules/delete.js';
 import { handleEdit } from '../modules/edit.js';
 import { handleLike } from '../modules/like.js';
 import { fadeInObserver } from '../utils/fadeInObserver.js';
-import { postTemplate, newPostCreateBtn } from '../utils/domElementList.js';
-
-// userIdの管理
-let nextUserId = 1;
-export function incrementUserId() {
-  nextUserId++;
-}
-export function getUserId() {
-  return nextUserId;
-}
+import { postTemplate } from '../utils/domElementList.js';
 
 // API呼び出し
 export function fetchInitialPosts() {
@@ -24,20 +15,15 @@ export function fetchInitialPosts() {
         const postElement = createPostElement(item);
         posts.prepend(postElement);
       });
-
-      const userIds = data.map((item) => item.userId);
-      const maxUserId = Math.max(...userIds);
-      nextUserId = maxUserId + 1;
     })
     .catch((err) => console.error(err.message));
 }
 
 // 投稿の操作
-export function createPostElement({ id, title, body, userId }) {
+export function createPostElement({ id, title, body }) {
   const postClone = postTemplate.cloneNode(true);
   postClone.classList.remove('template');
   postClone.classList.add('newPost');
-  postClone.dataset.userid = userId;
   postClone.dataset.likes = '0';
   postClone.dataset.liked = 'false';
 
@@ -57,7 +43,6 @@ export function createPostElement({ id, title, body, userId }) {
   })(title, body);
 
   getUserName(postClone);
-  postClone.querySelector('small').textContent = `User ID : ${userId}`;
   postClone.querySelector('.likesValue').textContent = '0';
   currentDate(postClone);
 
@@ -80,5 +65,4 @@ export function createPostElement({ id, title, body, userId }) {
 function getUserName(post) {
   const name = faker.name.findName();
   post.querySelector('.userName').textContent = name;
-  // return faker.name.findName();
 }
