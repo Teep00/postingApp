@@ -1,9 +1,5 @@
 // インポート
-import {
-  overlay,
-  createOverlayWithContent,
-  clickedOverlay,
-} from './overlay.js';
+import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { getAllPosts } from '../utils/allPost.js';
 
 // 並び替え

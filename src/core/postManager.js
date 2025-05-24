@@ -1,5 +1,4 @@
 // インポート
-import { newPostCreate } from '../modules/createPost.js';
 import { currentDate } from '../utils/time.js';
 import { handleDelete } from '../modules/delete.js';
 import { handleEdit } from '../modules/edit.js';
