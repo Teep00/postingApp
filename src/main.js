@@ -10,7 +10,7 @@ import {
   showAll,
   sort,
   newPostCreateBtn,
-  signUpBtn,
+  signupBtn,
   loginBtn,
 } from './utils/domElementList.js';
 
@@ -29,7 +29,7 @@ handleFilter(filter, showAll);
 handleSort(sort);
 
 // 新規登録
-handleSignUp(signUpBtn);
+handleSignUp(signupBtn);
 
 // ログイン
 handleLogin(loginBtn);

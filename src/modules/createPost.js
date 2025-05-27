@@ -53,14 +53,13 @@ export function newPostCreate(newPostCreateBtn, incrementUserId, getUserId) {
 
       const title = titleInput.value.trim();
       const body = mainTextInput.value.trim();
-      const userId = getUserId();
 
       if (!title || !body) return alert('未入力の項目があります');
 
       fetch('https://jsonplaceholder.typicode.com/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, body, userId }),
+        body: JSON.stringify({ title, body }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -74,8 +73,6 @@ export function newPostCreate(newPostCreateBtn, incrementUserId, getUserId) {
 
           posts.prepend(postElement);
           overlayElement.remove();
-
-          incrementUserId();
         })
         .catch((err) => console.error(err.message));
     });

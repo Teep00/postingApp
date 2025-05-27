@@ -1,10 +1,10 @@
 // インポート
-import { createOverlayWithContent } from '../utils/overlay.js';
+import { createConfirmDialog } from '../utils/confirmDialog.js';
 
 // 削除ボタン
 export function handleDelete(postElement, id) {
   const deleteBtn = postElement.querySelector('.deleteButton');
-  createConfirmDialog('本当に削除しますか？', () => {
+  createConfirmDialog('本当に削除しますか？', '削除', () => {
     deleteBtn.textContent = '削除中...';
     fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
       method: 'DELETE',
@@ -17,30 +17,5 @@ export function handleDelete(postElement, id) {
         alert(err.message);
         deleteBtn.textContent = '削除';
       });
-  });
-}
-
-// 削除ボタンを押した時のポップアップ
-export function createConfirmDialog(message, onConfirm) {
-  const confirmBox = document.createElement('div');
-  confirmBox.classList.add('confirmBox');
-
-  confirmBox.innerHTML = `
-  <p>${message}</p>
-  <div class="confirmButtons">
-    <button class="noButton">キャンセル</button>
-    <button class="yesButton">削除</button>
-  </div>
-  `;
-
-  const overlayElement = createOverlayWithContent(confirmBox);
-
-  confirmBox.querySelector('.noButton').addEventListener('click', () => {
-    overlayElement.remove();
-  });
-
-  confirmBox.querySelector('.yesButton').addEventListener('click', () => {
-    onConfirm();
-    overlayElement.remove();
   });
 }
