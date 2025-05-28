@@ -51,7 +51,7 @@ export function createPostElement({ id, title, body }) {
     .addEventListener('click', () => handleDelete(postClone, id));
   postClone
     .querySelector('.editButton')
-    .addEventListener('click', () => handleEdit(postClone, { id, userId }));
+    .addEventListener('click', () => handleEdit(postClone, { id }));
   postClone
     .querySelector('.likeButton')
     .addEventListener('click', () => handleLike(postClone));

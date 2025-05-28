@@ -2,8 +2,9 @@
 import { newPostCreate } from './modules/createPost.js';
 import { handleFilter } from './modules/filter.js';
 import { handleSort } from './modules/sort.js';
-import { handleSignUp } from './modules/signUp.js';
+import { handleSignup } from './modules/signUp.js';
 import { handleLogin } from './modules/login.js';
+import { handleLogout } from './modules/logout.js';
 import { fetchInitialPosts } from './core/postManager.js';
 import {
   filter,
@@ -12,11 +13,14 @@ import {
   newPostCreateBtn,
   signupBtn,
   loginBtn,
+  logoutBtn,
 } from './utils/domElementList.js';
+import { getCurrentUser } from './utils/getCurrentUser.js';
 
 // 初期投稿取得
 window.addEventListener('DOMContentLoaded', () => {
   fetchInitialPosts();
+  getCurrentUser();
 });
 
 // 新規投稿作成
@@ -29,7 +33,10 @@ handleFilter(filter, showAll);
 handleSort(sort);
 
 // 新規登録
-handleSignUp(signupBtn);
+handleSignup(signupBtn);
 
 // ログイン
 handleLogin(loginBtn);
+
+// ログアウト
+handleLogout(logoutBtn);

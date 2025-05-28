@@ -2,9 +2,10 @@ import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { charLimit } from '../utils/charLimit.js';
 import { enterSubmit } from '../utils/keyEvent.js';
 import { createPostElement } from '../core/postManager.js';
+import { userName } from '../utils/domElementList.js';
 
 // 新規投稿作成
-export function newPostCreate(newPostCreateBtn, incrementUserId, getUserId) {
+export function newPostCreate(newPostCreateBtn) {
   newPostCreateBtn.addEventListener('click', () => {
     const postForm = document.createElement('form');
     postForm.classList.add('postForm');
@@ -70,6 +71,10 @@ export function newPostCreate(newPostCreateBtn, incrementUserId, getUserId) {
 
           newEditBtn.style.display = 'block';
           newDeleteBtn.style.display = 'block';
+
+          userName.textContent = JSON.parse(
+            localStorage.getItem('currentUser')
+          ).userName;
 
           posts.prepend(postElement);
           overlayElement.remove();
