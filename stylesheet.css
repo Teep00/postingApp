@@ -292,7 +292,13 @@ button {
 
 #buttonContainer {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
+}
+
+.like-editArea {
+  display: flex;
 }
 
 /* -------- いいねボタン -------- */
@@ -322,9 +328,8 @@ button {
 
 /* -------- 編集・削除ボタン -------- */
 
-.deleteButton,
+.deleteIcon,
 .editButton {
-  display: none;
   width: 70px;
   height: 45px;
 }
@@ -355,7 +360,13 @@ button {
 
 /* -------- 削除ボタン -------- */
 
-.dateArea {
+.deleteIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.timeArea {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -364,11 +375,11 @@ button {
   letter-spacing: 1px;
 }
 
-.dateArea div {
+.timeArea div {
   margin: 0 5px;
 }
 
-.dateArea p {
+.timeArea p {
   margin: 0;
   font-size: 14px;
 }
@@ -530,6 +541,7 @@ button {
   position: fixed;
   top: 50%;
   left: 50%;
+  text-align: center;
   background: rgba(50, 50, 50, 0.95);
   color: #fff;
   padding: 1.2em 2em;

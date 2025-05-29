@@ -3,7 +3,7 @@ import { createConfirmDialog } from '../utils/confirmDialog.js';
 
 // 削除ボタン
 export function handleDelete(postElement, id) {
-  const deleteBtn = postElement.querySelector('.deleteButton');
+  const deleteBtn = postElement.querySelector('.deleteIcon');
   createConfirmDialog({
     mainMessage: '本当に削除しますか？',
     affirmMessage: '削除',
@@ -18,7 +18,6 @@ export function handleDelete(postElement, id) {
         })
         .catch((err) => {
           alert(err.message);
-          deleteBtn.textContent = '削除';
         });
     },
     clickNoBtn: () => {},

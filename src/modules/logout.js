@@ -23,5 +23,18 @@ export function handleLogout(logoutBtn) {
 
     logoutBtn.classList.add('isHidden');
     logoutBtn.classList.remove('isActive');
+
+    const editBtns = document.querySelectorAll('.editButton');
+    const deleteBtns = document.querySelectorAll('.deleteIcon');
+
+    editBtns.forEach((btn) => {
+      btn.classList.add('isHidden');
+      btn.classList.remove('isActive');
+    });
+
+    deleteBtns.forEach((btn) => {
+      btn.classList.add('isHidden');
+      btn.classList.remove('isActive');
+    });
   });
 }

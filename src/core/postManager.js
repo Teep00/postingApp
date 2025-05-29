@@ -20,7 +20,7 @@ export function fetchInitialPosts() {
 }
 
 // 投稿の操作
-export function createPostElement({ id, title, body }) {
+export function createPostElement({ id, title, body, userName }) {
   const postClone = postTemplate.cloneNode(true);
   postClone.classList.remove('template');
   postClone.classList.add('newPost');
@@ -42,12 +42,12 @@ export function createPostElement({ id, title, body }) {
     postClone.querySelector('.mainText').textContent = mainTextEl;
   })(title, body);
 
-  getUserName(postClone);
+  getUserName(postClone, userName);
   postClone.querySelector('.likesValue').textContent = '0';
   currentDate(postClone);
 
   postClone
-    .querySelector('.deleteButton')
+    .querySelector('.deleteIcon')
     .addEventListener('click', () => handleDelete(postClone, id));
   postClone
     .querySelector('.editButton')
@@ -62,7 +62,7 @@ export function createPostElement({ id, title, body }) {
 }
 
 // ユーザーネーム取得
-function getUserName(post) {
+function getUserName(post, userName) {
   const name = faker.name.findName();
-  post.querySelector('.userName').textContent = name;
+  post.querySelector('.userName').textContent = userName ?? name;
 }

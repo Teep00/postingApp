@@ -13,7 +13,7 @@ export function currentDate(post) {
   };
 
   post.dataset.timeStamp = curr.time;
-  post.querySelector('.dateArea').innerHTML = `
+  post.querySelector('.timeArea').innerHTML = `
   <div class="date">
     ${curr.year}年${curr.month}月${curr.day}日
   </div>

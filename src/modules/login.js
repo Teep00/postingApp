@@ -31,6 +31,14 @@ export function handleLogin(loginBtn) {
     loginForm.classList.add('loginForm');
     const overlayElement = createOverlayWithContent(loginForm);
 
+    const loginUserId = loginForm.querySelector('.loginUserId');
+    const loginPassword = loginForm.querySelector('.loginPassword');
+
+    loginForm.addEventListener('input', () => {
+      loginUserId.value = loginUserId.value.replace(/[^a-zA-Z1-9]/g, '');
+      loginPassword.value = loginPassword.value.replace(/[^a-zA-Z1-9]/g, '');
+    });
+
     function showError(errorMessage) {
       const errorMsg = loginForm.querySelector(errorMessage);
       errorMsg.classList.remove('isHidden');
@@ -46,9 +54,6 @@ export function handleLogin(loginBtn) {
       e.preventDefault();
 
       const users = JSON.parse(localStorage.getItem('users')) || [];
-
-      const loginUserId = loginForm.querySelector('.loginUserId');
-      const loginPassword = loginForm.querySelector('.loginPassword');
 
       let hasError = false;
 

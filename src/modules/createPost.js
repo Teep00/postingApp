@@ -57,6 +57,8 @@ export function newPostCreate(newPostCreateBtn) {
 
       if (!title || !body) return alert('未入力の項目があります');
 
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
       fetch('https://jsonplaceholder.typicode.com/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -64,17 +66,19 @@ export function newPostCreate(newPostCreateBtn) {
       })
         .then((res) => res.json())
         .then((data) => {
-          const postElement = createPostElement(data);
+          const postElement = createPostElement({
+            ...data,
+            userName: currentUser.userName,
+          });
 
           const newEditBtn = postElement.querySelector('.editButton');
-          const newDeleteBtn = postElement.querySelector('.deleteButton');
+          const newDeleteBtn = postElement.querySelector('.deleteIcon');
 
-          newEditBtn.style.display = 'block';
-          newDeleteBtn.style.display = 'block';
+          newEditBtn.classList.remove('isHidden');
+          newEditBtn.classList.add('isActive');
 
-          userName.textContent = JSON.parse(
-            localStorage.getItem('currentUser')
-          ).userName;
+          newDeleteBtn.classList.remove('isHidden');
+          newDeleteBtn.classList.add('isActive');
 
           posts.prepend(postElement);
           overlayElement.remove();
