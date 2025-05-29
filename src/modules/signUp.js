@@ -1,6 +1,7 @@
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { createConfirmDialog } from '../utils/confirmDialog.js';
 import { showCenterToast } from '../utils/toast.js';
+import { showError, resetAllErrors } from '../utils/errorMessage.js';
 
 export function handleSignup(signupBtn) {
   signupBtn.addEventListener('click', () => {
@@ -15,7 +16,7 @@ export function showSignupForm(savedValues = {}) {
     <div class="signupUserNameArea">
       <h3>ユーザーネーム</h3>
       <div class="signupUserNameOuter">
-        <input type="text" class="signupUserName" name="UserName" minlength="5" maxlength="15" >
+        <input type="text" class="signupUserName" name="UserName"  maxlength="15" >
         <div class="signupUserNameInner">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#28a745" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="userNameCheckIcon isHidden">
           <polyline points="4 12 10 17 20 6" />
@@ -30,7 +31,6 @@ export function showSignupForm(savedValues = {}) {
         <p class="signupUserNameDiscription">半角英数字5文字以上<br>15文字以下で登録してください</p>
         <p class="errorMessage isHidden userNameRequired">ユーザーネームが入力されていません</p>
         <p class="errorMessage isHidden userNameTooShort">ユーザーネームは5文字以上で登録してください</p>
-        <p class="errorMessage isHidden invalidUserName">ユーザーネームは半角英数字のみ使用できます</p>
         <p class="errorMessage isHidden duplicateUserName">このユーザーネームは既に使われています</p>
       </div>
     </div>
@@ -112,25 +112,42 @@ export function showSignupForm(savedValues = {}) {
 
   function signupInput(inputElement, checkIcon, crossIcon) {
     inputElement.addEventListener('input', () => {
-      inputElement.value = inputElement.value.replace(/[^a-zA-Z0-9]/g, '');
-      if (inputElement.value.length === 0) {
-        crossIcon.classList.add('isHidden');
-        crossIcon.classList.remove('isActive');
+      if (inputElement !== elements.signupUserName) {
+        inputElement.value = inputElement.value.replace(/[^a-zA-Z0-9]/g, '');
 
-        checkIcon.classList.add('isHidden');
-        checkIcon.classList.remove('isActive');
-      } else if (inputElement.value.length < 5) {
-        crossIcon.classList.add('isActive');
-        crossIcon.classList.remove('isHidden');
+        if (inputElement.value.length === 0) {
+          crossIcon.classList.add('isHidden');
+          crossIcon.classList.remove('isActive');
 
-        checkIcon.classList.add('isHidden');
-        checkIcon.classList.remove('isActive');
+          checkIcon.classList.add('isHidden');
+          checkIcon.classList.remove('isActive');
+        } else if (inputElement.value.length < 5) {
+          crossIcon.classList.add('isActive');
+          crossIcon.classList.remove('isHidden');
+
+          checkIcon.classList.add('isHidden');
+          checkIcon.classList.remove('isActive');
+        } else {
+          crossIcon.classList.add('isHidden');
+          crossIcon.classList.remove('isActive');
+
+          checkIcon.classList.add('isActive');
+          checkIcon.classList.remove('isHidden');
+        }
       } else {
-        crossIcon.classList.add('isHidden');
-        crossIcon.classList.remove('isActive');
+        if (inputElement.value.length === 0) {
+          crossIcon.classList.add('isHidden');
+          crossIcon.classList.remove('isActive');
 
-        checkIcon.classList.add('isActive');
-        checkIcon.classList.remove('isHidden');
+          checkIcon.classList.add('isHidden');
+          checkIcon.classList.remove('isActive');
+        } else {
+          crossIcon.classList.add('isHidden');
+          crossIcon.classList.remove('isActive');
+
+          checkIcon.classList.add('isActive');
+          checkIcon.classList.remove('isHidden');
+        }
       }
     });
   }
@@ -151,25 +168,10 @@ export function showSignupForm(savedValues = {}) {
     elements.passwordCrossIcon
   );
 
-  function resetAllErrors() {
-    signupForm.querySelectorAll('.errorMessage').forEach((el) => {
-      el.classList.add('isHidden');
-      el.classList.remove('isActive');
-    });
-  }
-
-  function showError(selector) {
-    const target = signupForm.querySelector(selector);
-    if (target) {
-      target.classList.remove('isHidden');
-      target.classList.add('isActive');
-    }
-  }
-
   signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    resetAllErrors();
+    resetAllErrors(signupForm, '.errorMessage');
 
     elements.signupUserNameDiscription.classList.add('isHidden');
     elements.signupUserNameDiscription.classList.remove('isActive');
@@ -186,36 +188,31 @@ export function showSignupForm(savedValues = {}) {
     let hasError = false;
 
     if (signupUserNameValue.length === 0) {
-      showError('.userNameRequired');
-      elements.signupUserNameDiscription.classList.add('isHidden');
-      elements.signupUserNameDiscription.classList.remove('isActive');
-      hasError = true;
-    } else if (signupUserNameValue.length < 5) {
-      showError('.userNameTooShort');
+      showError(signupForm, '.userNameRequired');
       elements.signupUserNameDiscription.classList.add('isHidden');
       elements.signupUserNameDiscription.classList.remove('isActive');
       hasError = true;
     }
 
     if (signupUserIdValue.length === 0) {
-      showError('.userIdRequired');
+      showError(signupForm, '.userIdRequired');
       elements.signupUserIdDiscription.classList.add('isHidden');
       elements.signupUserIdDiscription.classList.remove('isActive');
       hasError = true;
     } else if (signupUserIdValue.length < 5) {
-      showError('.userIdTooShort');
+      showError(signupForm, '.userIdTooShort');
       elements.signupUserIdDiscription.classList.add('isHidden');
       elements.signupUserIdDiscription.classList.remove('isActive');
       hasError = true;
     }
 
     if (signupPasswordValue.length === 0) {
-      showError('.passwordRequired');
+      showError(signupForm, '.passwordRequired');
       elements.signupPasswordDiscription.classList.add('isHidden');
       elements.signupPasswordDiscription.classList.remove('isActive');
       hasError = true;
     } else if (signupPasswordValue.length < 5) {
-      showError('.passwordTooShort');
+      showError(signupForm, '.passwordTooShort');
       elements.signupPasswordDiscription.classList.add('isHidden');
       elements.signupPasswordDiscription.classList.remove('isActive');
       hasError = true;
@@ -223,24 +220,17 @@ export function showSignupForm(savedValues = {}) {
 
     // 文字数が足りている場合のみ、形式エラーを表示
     if (
-      !alphanumeric.test(signupUserNameValue) &&
-      signupUserNameValue.length >= 5
-    ) {
-      showError('.invalidUserId');
-      hasError = true;
-    }
-    if (
       !alphanumeric.test(signupUserIdValue) &&
       signupUserIdValue.length >= 5
     ) {
-      showError('.invalidUserId');
+      showError(signupForm, '.invalidUserId');
       hasError = true;
     }
     if (
       !alphanumeric.test(signupPasswordValue) &&
       signupPasswordValue.length >= 5
     ) {
-      showError('.invalidPassword');
+      showError(signupForm, '.invalidPassword');
       hasError = true;
     }
 
@@ -253,11 +243,11 @@ export function showSignupForm(savedValues = {}) {
     );
 
     if (duplicateUserName) {
-      showError('.duplicateUserName');
+      showError(signupForm, '.duplicateUserName');
       hasError = true;
     }
     if (duplicateUserId) {
-      showError('.duplicateUserId');
+      showError(signupForm, '.duplicateUserId');
       hasError = true;
     }
 

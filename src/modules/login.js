@@ -1,6 +1,7 @@
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { showCenterToast } from '../utils/toast.js';
 import { myUserName, signupBtn, logoutBtn } from '../utils/domElementList.js';
+import { showError, resetAllErrors } from '../utils/errorMessage.js';
 
 export function handleLogin(loginBtn) {
   loginBtn.addEventListener('click', () => {
@@ -13,7 +14,7 @@ export function handleLogin(loginBtn) {
         <input type="text" class="loginUserId" name="userId"  maxlength="15" >
       </div>
       <div class="errorContainer">
-        <p class="errorMessage userIdRequired">ユーザーIDが入力されていません</p>
+        <p class="errorMessage isHidden userIdRequired">ユーザーIDが入力されていません</p>
       </div>
     </div>
     <div class="loginPasswordArea">
@@ -22,9 +23,9 @@ export function handleLogin(loginBtn) {
         <input type="password" class="loginPassword" name="password"  maxlength="15" >
         </div>
         <div class="errorContainer">
-          <p class="errorMessage passwordRequired">パスワードが入力されていません</p>
+          <p class="errorMessage isHidden passwordRequired">パスワードが入力されていません</p>
         </div>
-        <p class="errorMessage notFoundUser">ユーザーIDまたはパスワードが間違っています</p>
+        <p class="errorMessage isHidden loginNotFoundUser">ユーザーIDまたはパスワードが間違っています</p>
       </div>
     <button type="submit" class="loginFormBtn">ログイン</button>
     `;
@@ -39,30 +40,21 @@ export function handleLogin(loginBtn) {
       loginPassword.value = loginPassword.value.replace(/[^a-zA-Z1-9]/g, '');
     });
 
-    function showError(errorMessage) {
-      const errorMsg = loginForm.querySelector(errorMessage);
-      errorMsg.classList.remove('isHidden');
-      errorMsg.classList.add('isActive');
-    }
-
-    loginForm.querySelectorAll('.errorMessage').forEach((el) => {
-      el.classList.add('isHidden');
-      el.classList.remove('isActive');
-    });
-
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      resetAllErrors(loginForm, '.errorMessage');
 
       const users = JSON.parse(localStorage.getItem('users')) || [];
 
       let hasError = false;
 
       if (loginUserId.value.length === 0) {
-        showError('.userIdRequired');
+        showError(loginForm, '.userIdRequired');
         hasError = true;
       }
       if (loginPassword.value.length === 0) {
-        showError('.passwordRequired');
+        showError(loginForm, '.passwordRequired');
         hasError = true;
       }
 
@@ -73,7 +65,7 @@ export function handleLogin(loginBtn) {
       );
 
       if (!foundUser) {
-        showError('.notFoundUser');
+        showError(loginForm, '.loginNotFoundUser');
         hasError = true;
       }
 

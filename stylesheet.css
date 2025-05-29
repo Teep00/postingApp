@@ -150,15 +150,11 @@ button {
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
 
-.sortArea {
-  display: flex;
-}
-
-.sortUserIdArea,
+.sortLikeValueArea,
 .sortPostingTimeArea {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding-top: 5px;
 }
 
 .sortForm button {
@@ -168,7 +164,7 @@ button {
 
 /* -------- 投稿絞り込み フォーム -------- */
 
-.filterForm {
+.searchForm {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -178,19 +174,19 @@ button {
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
 
-.filterInput {
+.searchForm h2 {
+  font-size: 22px;
+}
+
+.searchInput {
   width: 200px;
   height: 50px;
 }
 
-.filterButton {
+.searchButton {
   margin-top: 20px;
   width: 70px;
   height: 40px;
-}
-
-.showAll {
-  display: none;
 }
 
 /* ------------------ 投稿のデザイン ------------------ */

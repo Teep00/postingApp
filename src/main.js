@@ -1,13 +1,13 @@
 // インポート
 import { newPostCreate } from './modules/createPost.js';
-import { handleFilter } from './modules/filter.js';
+import { handleSearch } from './modules/search.js';
 import { handleSort } from './modules/sort.js';
 import { handleSignup } from './modules/signUp.js';
 import { handleLogin } from './modules/login.js';
 import { handleLogout } from './modules/logout.js';
 import { fetchInitialPosts } from './core/postManager.js';
 import {
-  filter,
+  search,
   showAll,
   sort,
   newPostCreateBtn,
@@ -27,7 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
 newPostCreate(newPostCreateBtn);
 
 // フィルター
-handleFilter(filter, showAll);
+handleSearch(search, showAll);
 
 // 並び替え
 handleSort(sort);

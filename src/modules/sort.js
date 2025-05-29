@@ -10,9 +10,8 @@ export function handleSort(sort) {
     sortForm.innerHTML = `
     <h2>並べ替え</h2>
     <div class="sortArea"> 
-      <div class="sortUserIdArea">
-      <button type="button" class="ascUserId">User ID : 小さい順</button>
-      <button type="button" class="descUserId">User ID : 大きい順</button>
+      <div class="sortLikeValueArea">
+      <button type="button" class="descLikeValue">いいね数 : 多い順</button>
       </div>
       <div class="sortPostingTimeArea">
       <button type="button" class="ascTime ">投稿時間 : 新しい順</button>
@@ -24,11 +23,8 @@ export function handleSort(sort) {
     const overlayElement = createOverlayWithContent(sortForm);
 
     sortForm
-      .querySelector('.ascUserId')
-      .addEventListener('click', () => sortUserId('asc', overlayElement));
-    sortForm
-      .querySelector('.descUserId')
-      .addEventListener('click', () => sortUserId('desc', overlayElement));
+      .querySelector('.descLikeValue')
+      .addEventListener('click', () => sortLikeValue('desc', overlayElement));
     sortForm.querySelector('.ascTime').addEventListener('click', () => {
       sortPostingTime('asc', overlayElement);
     });
@@ -40,10 +36,10 @@ export function handleSort(sort) {
   });
 }
 
-function sortUserId(order, overlayElement) {
+function sortLikeValue(order, overlayElement) {
   const sorted = getAllPosts().sort((a, b) => {
-    const idA = parseInt(a.dataset.userid);
-    const idB = parseInt(b.dataset.userid);
+    const idA = parseInt(a.dataset.likes);
+    const idB = parseInt(b.dataset.likes);
     return order === 'asc' ? idA - idB : idB - idA;
   });
   sorted.forEach((el) => posts.appendChild(el));
