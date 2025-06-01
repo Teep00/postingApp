@@ -12,7 +12,7 @@ export function handleSearch(search, showAll) {
     <h2>ユーザーネームで検索</h2>
     <input type="text" placeholder="ここへ入力" class="searchInput" /> 
     <div class="errorContainer">
-      <p class="errorMessage isHidden seachWordRequired">検索ワードを入力してください</p>
+      <p class="errorMessage isHidden searchWordRequired">検索ワードを入力してください</p>
       <p class="errorMessage isHidden searchNotFoundUser">一致するユーザーが見つかりませんでした</p>
     </div>
     <button type="button" class="searchButton">実行</button>
@@ -33,7 +33,7 @@ export function handleSearch(search, showAll) {
         .toLowerCase();
 
       if (!inputValue) {
-        showError(searchForm, '.seachWordRequired');
+        showError(searchForm, '.searchWordRequired');
         return;
       }
 

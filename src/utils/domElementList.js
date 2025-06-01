@@ -1,8 +1,6 @@
 export const myUserName = document.querySelector('.myUserName');
 export const posts = document.querySelector('#posts');
 export const postTemplate = document.querySelector('.post');
-export const editBtn = document.querySelector('.editButton');
-export const deleteBtn = document.querySelector('.deleteIcon');
 export const operationArea = document.querySelector('#operationArea');
 export const userName = document.querySelector('.userName');
 export const search = document.querySelector('.search');

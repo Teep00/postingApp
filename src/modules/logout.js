@@ -24,15 +24,9 @@ export function handleLogout(logoutBtn) {
     logoutBtn.classList.add('isHidden');
     logoutBtn.classList.remove('isActive');
 
-    const editBtns = document.querySelectorAll('.editButton');
-    const deleteBtns = document.querySelectorAll('.deleteIcon');
+    const buttonContainers = document.querySelectorAll('.buttonContainer');
 
-    editBtns.forEach((btn) => {
-      btn.classList.add('isHidden');
-      btn.classList.remove('isActive');
-    });
-
-    deleteBtns.forEach((btn) => {
+    buttonContainers.forEach((btn) => {
       btn.classList.add('isHidden');
       btn.classList.remove('isActive');
     });

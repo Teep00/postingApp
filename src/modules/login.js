@@ -25,9 +25,9 @@ export function handleLogin(loginBtn) {
         <div class="errorContainer">
           <p class="errorMessage isHidden passwordRequired">パスワードが入力されていません</p>
         </div>
-        <p class="errorMessage isHidden loginNotFoundUser">ユーザーIDまたはパスワードが間違っています</p>
+        <p class="errorMessage isHidden loginFaild">ユーザーIDまたはパスワードが間違っています</p>
       </div>
-    <button type="submit" class="loginFormBtn">ログイン</button>
+    <button type="submit" class="loginFormInBtn">ログイン</button>
     `;
     loginForm.classList.add('loginForm');
     const overlayElement = createOverlayWithContent(loginForm);
@@ -43,7 +43,7 @@ export function handleLogin(loginBtn) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      resetAllErrors(loginForm, '.errorMessage');
+      resetAllErrors(loginForm);
 
       const users = JSON.parse(localStorage.getItem('users')) || [];
 
@@ -65,7 +65,7 @@ export function handleLogin(loginBtn) {
       );
 
       if (!foundUser) {
-        showError(loginForm, '.loginNotFoundUser');
+        showError(loginForm, '.loginFaild');
         hasError = true;
       }
 

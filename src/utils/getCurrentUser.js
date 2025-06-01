@@ -25,6 +25,13 @@ export function getCurrentUser() {
 
     logoutBtn.classList.remove('isHidden');
     logoutBtn.classList.add('isActive');
+
+    const buttonContainers = document.querySelectorAll('.buttonContainer');
+
+    buttonContainers.forEach((btn) => {
+      btn.classList.remove('isHidden');
+      btn.classList.add('isActive');
+    });
   } else {
     myUserName.textContent = '';
 
@@ -39,5 +46,12 @@ export function getCurrentUser() {
 
     logoutBtn.classList.add('isHidden');
     logoutBtn.classList.remove('isActive');
+
+    const buttonContainers = document.querySelectorAll('.buttonContainer');
+
+    buttonContainers.forEach((btn) => {
+      btn.classList.add('isHidden');
+      btn.classList.remove('isActive');
+    });
   }
 }

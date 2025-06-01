@@ -1,3 +1,6 @@
+// インポート
+import { errorMessage } from '../utils/errorMessage.js';
+
 // 文字数制限
 export function charLimit(
   titleInput,
@@ -23,11 +26,9 @@ export function charLimit(
     const isTitleTooLong = titleLength > maxTitleLength;
     const isMainTextTooLong = mainTextLength > maxMainTextLength;
 
-    titleError.textContent = isTitleTooLong
-      ? 'タイトルが30字を超えています'
-      : '';
+    titleError.textContent = isTitleTooLong ? errorMessage.titleTooLong : '';
     mainTextError.textContent = isMainTextTooLong
-      ? '本文が150字を超えています'
+      ? errorMessage.mainTextTooLong
       : '';
     button.disabled = isTitleTooLong || isMainTextTooLong;
   }

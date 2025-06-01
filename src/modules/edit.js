@@ -23,7 +23,7 @@ export function handleEdit(postElement, { id, userId }) {
       <p id="mainTextError" class="errorMessage"></p>
       <p id="mainTextChar" class="char"></p>
     </div>
-    <button type="submit" class="submitBtn">保存</button>
+    <button type="submit" class="editFormInBtn">保存</button>
   `;
 
   const overlayElement = createOverlayWithContent(editForm);
@@ -35,7 +35,7 @@ export function handleEdit(postElement, { id, userId }) {
   const mainTextError = editForm.querySelector('#mainTextError');
   const titleChar = editForm.querySelector('#titleChar');
   const mainTextChar = editForm.querySelector('#mainTextChar');
-  const submitBtn = editForm.querySelector('.submitBtn');
+  const editFormInBtn = editForm.querySelector('.editFormInBtn');
 
   clickedOverlay(editForm, overlayElement);
 
@@ -46,14 +46,14 @@ export function handleEdit(postElement, { id, userId }) {
     mainTextError,
     titleChar,
     mainTextChar,
-    submitBtn
+    editFormInBtn
   );
 
   editForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (submitBtn.disabled) return;
+    if (editFormInBtn.disabled) return;
 
-    enterSubmit(editForm, submitBtn);
+    enterSubmit(editForm);
 
     const newTitle = editForm.querySelector('.newTitle').value.trim() || title;
     const newMainText =

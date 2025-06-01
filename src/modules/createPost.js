@@ -2,60 +2,147 @@ import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { charLimit } from '../utils/charLimit.js';
 import { enterSubmit } from '../utils/keyEvent.js';
 import { createPostElement } from '../core/postManager.js';
-import { userName } from '../utils/domElementList.js';
+import {
+  createElementWithClasses,
+  createInputField,
+  createTextareaField,
+  createButtonField,
+} from '../utils/domFactory.js';
+import {
+  showError,
+  resetAllErrors,
+  errorMessage,
+} from '../utils/errorMessage.js';
 
 // 新規投稿作成
 export function newPostCreate(newPostCreateBtn) {
   newPostCreateBtn.addEventListener('click', () => {
-    const postForm = document.createElement('form');
-    postForm.classList.add('postForm');
-    postForm.innerHTML = `
-    <h2>新規投稿</h2>
-    <input type="text" placeholder="タイトル" class="newTitle" name="newTitle"/>
-    <div class="errorContainer">
-      <p id="titleError" class="errorMessage"></p>
-      <p id="titleChar" class="char"></p>
-    </div>
-    <textarea placeholder="本文" class="newMainText" name="newBody" ></textarea>
-    <div class="errorContainer">
-      <p id="mainTextError" class="errorMessage"></p>
-      <p id="mainTextChar" class="char"></p>
-    </div>
-    <button type="submit">送信</button>
-  `;
+    /*---------------------- DOM構築 ----------------------*/
+
+    const postForm = createElementWithClasses('form', 'postForm');
+
+    const postFormSectionTitle = createElementWithClasses(
+      'h2',
+      'postFormSectionTitle'
+    );
+    postFormSectionTitle.textContent = '新規投稿';
+
+    const newTitle = createInputField({
+      type: 'text',
+      placeholder: 'タイトル',
+      classes: 'newTitle',
+    });
+
+    const titleErrorContainer = createElementWithClasses(
+      'div',
+      'titleErrorContainer'
+    );
+
+    const titleCharError = createElementWithClasses('p', 'titleCharError');
+
+    const titleChar = createElementWithClasses('p', 'titleChar');
+
+    const newMainText = createTextareaField({
+      placeholder: '本文',
+      classes: 'newMainText',
+    });
+
+    const mainTextErrorContainer = createElementWithClasses(
+      'div',
+      'mainTextErrorContainer'
+    );
+
+    const mainTextCharError = createElementWithClasses(
+      'p',
+      'mainTextCharError'
+    );
+
+    const titleRequiredError = createElementWithClasses(
+      'p',
+      'titleRequired',
+      'errorMessage',
+      'isHidden'
+    );
+    titleRequiredError.textContent = errorMessage.titleRequired;
+
+    const mainTextRequiredError = createElementWithClasses(
+      'p',
+      'mainTextRequired',
+      'errorMessage',
+      'isHidden'
+    );
+    mainTextRequiredError.textContent = errorMessage.mainTextRequired;
+
+    const mainTextChar = createElementWithClasses('p', 'mainTextChar');
+
+    const postFormInBtn = createButtonField('submit', 'postFormInBtn');
+    postFormInBtn.textContent = '送信';
+
+    /*----------------------------------------------------*/
+
+    postForm.appendChild(postFormSectionTitle);
+    postForm.appendChild(newTitle);
+    postForm.appendChild(titleErrorContainer);
+    titleErrorContainer.appendChild(titleCharError);
+    titleErrorContainer.appendChild(titleRequiredError);
+    titleErrorContainer.appendChild(titleChar);
+    postForm.appendChild(newMainText);
+    postForm.appendChild(mainTextErrorContainer);
+    mainTextErrorContainer.appendChild(mainTextCharError);
+    mainTextErrorContainer.appendChild(mainTextRequiredError);
+    mainTextErrorContainer.appendChild(mainTextChar);
+    postForm.appendChild(postFormInBtn);
 
     const overlayElement = createOverlayWithContent(postForm);
-
-    const titleInput = postForm.querySelector('.newTitle');
-    const mainTextInput = postForm.querySelector('.newMainText');
-    const titleError = postForm.querySelector('#titleError');
-    const mainTextError = postForm.querySelector('#mainTextError');
-    const titleChar = postForm.querySelector('#titleChar');
-    const mainTextChar = postForm.querySelector('#mainTextChar');
-    const submitBtn = postForm.querySelector('button');
 
     clickedOverlay(postForm, overlayElement);
 
     charLimit(
-      titleInput,
-      mainTextInput,
-      titleError,
-      mainTextError,
+      newTitle,
+      newMainText,
+      titleCharError,
+      mainTextCharError,
       titleChar,
       mainTextChar,
-      submitBtn
+      postFormInBtn
     );
+
+    newTitle.addEventListener('input', () => {
+      if (newTitle.value.trim()) {
+        titleRequiredError.classList.add('isHidden');
+        titleRequiredError.classList.remove('isActive');
+      }
+    });
+    newMainText.addEventListener('input', () => {
+      if (newMainText.value.trim()) {
+        mainTextRequiredError.classList.add('isHidden');
+        mainTextRequiredError.classList.remove('isActive');
+      }
+    });
+
+    enterSubmit(postForm);
 
     postForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (submitBtn.disabled) return;
+      resetAllErrors(postForm);
 
-      enterSubmit(postForm, submitBtn);
+      const title = newTitle.value.trim();
+      const body = newMainText.value.trim();
 
-      const title = titleInput.value.trim();
-      const body = mainTextInput.value.trim();
+      let hasError = false;
 
-      if (!title || !body) return alert('未入力の項目があります');
+      if (!title) {
+        showError(postForm, '.titleRequired', errorMessage.titleRequired);
+        hasError = true;
+      }
+      if (!body) {
+        showError(postForm, '.mainTextRequired', errorMessage.mainTextRequired);
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      if (postFormInBtn.disabled) return;
 
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -71,14 +158,10 @@ export function newPostCreate(newPostCreateBtn) {
             userName: currentUser.userName,
           });
 
-          const newEditBtn = postElement.querySelector('.editButton');
-          const newDeleteBtn = postElement.querySelector('.deleteIcon');
+          const buttonContainer = postElement.querySelector('.buttonContainer');
 
-          newEditBtn.classList.remove('isHidden');
-          newEditBtn.classList.add('isActive');
-
-          newDeleteBtn.classList.remove('isHidden');
-          newDeleteBtn.classList.add('isActive');
+          buttonContainer.classList.remove('isHidden');
+          buttonContainer.classList.remove('isActive');
 
           posts.prepend(postElement);
           overlayElement.remove();
@@ -87,3 +170,17 @@ export function newPostCreate(newPostCreateBtn) {
     });
   });
 }
+// postForm.innerHTML = `
+//   <h2>新規投稿</h2>
+//   <input type="text" placeholder="タイトル" class="newTitle" name="newTitle"/>
+//   <div class="errorContainer">
+//     <p id="titleError" class="errorMessage"></p>
+//     <p id="titleChar" class="char"></p>
+//   </div>
+//   <textarea placeholder="本文" class="newMainText" name="newBody" ></textarea>
+//   <div class="errorContainer">
+//     <p id="mainTextError" class="errorMessage"></p>
+//     <p id="mainTextChar" class="char"></p>
+//   </div>
+//   <button type="submit">送信</button>
+// `;

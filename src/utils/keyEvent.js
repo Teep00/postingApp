@@ -1,10 +1,10 @@
 // Enterキーでsubmitイベント発火
-export function enterSubmit(submitForm, submitBtn) {
+export function enterSubmit(submitForm) {
   submitForm.querySelectorAll('input').forEach((input) =>
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        submitBtn.submit();
+        submitForm.submit();
       }
     })
   );
