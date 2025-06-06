@@ -2,7 +2,7 @@
 import { newPostCreate } from './modules/createPost.js';
 import { handleSearch } from './modules/search.js';
 import { handleSort } from './modules/sort.js';
-import { handleSignup } from './modules/signUp.js';
+import { handleSignup } from './modules/signup.js';
 import { handleLogin } from './modules/login.js';
 import { handleLogout } from './modules/logout.js';
 import { fetchInitialPosts } from './core/postManager.js';
@@ -19,8 +19,8 @@ import { getCurrentUser } from './utils/getCurrentUser.js';
 
 // 初期投稿取得
 window.addEventListener('DOMContentLoaded', () => {
-  fetchInitialPosts();
   getCurrentUser();
+  fetchInitialPosts();
 });
 
 // 新規投稿作成

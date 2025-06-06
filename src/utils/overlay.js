@@ -25,7 +25,8 @@ export function clickedOverlay(form, overlay) {
 
   const onMouseUp = (e) => {
     if (isOutsideClick && !form.contains(e.target)) {
-      overlay.remove();
+      // overlay.remove();
+      if (document.body.contains(overlay)) overlay.remove();
       /*--ここでaddEventListenerを削除しておかないとイベントが残り続ける--*/
       form.removeEventListener('mousedown', onMouseDown);
       document.removeEventListener('mouseup', onMouseUp);

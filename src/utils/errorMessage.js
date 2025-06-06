@@ -3,18 +3,17 @@ export function showError(form, selector, msg) {
   if (target) {
     target.textContent = msg;
     target.classList.remove('isHidden');
-    target.classList.add('isActive');
   }
 }
 export function resetAllErrors(form) {
   form.querySelectorAll('.errorMessage').forEach((el) => {
     el.classList.add('isHidden');
-    el.classList.remove('isActive');
     el.textContent = '';
   });
 }
 
 export const errorMessage = {
+  userNameRequired: 'ユーザーネームが入力されていません',
   userIdRequired: 'ユーザーIDが入力されていません',
   passwordRequired: 'パスワードが入力されていません',
   titleRequired: 'タイトルが入力されていません',
@@ -22,7 +21,6 @@ export const errorMessage = {
   searchWordRequired: '検索ワードを入力してください',
 
   userIdTooShort: 'ユーザーIDは5文字以上で登録してください',
-  userNameTooShort: 'ユーザーネームは5文字以上で登録してください',
   passwordTooShort: 'パスワードは5文字以上で登録してください',
 
   titleTooLong: 'タイトルが30字を超えています',

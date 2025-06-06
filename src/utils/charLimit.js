@@ -18,18 +18,26 @@ export function charLimit(
     const titleLength = titleInput.value.length;
     const mainTextLength = mainTextInput.value.length;
 
-    titleChar.textContent =
-      titleLength > 0 ? `${titleLength} / ${maxTitleLength}` : '';
-    mainTextChar.textContent =
-      mainTextLength > 0 ? `${mainTextLength} / ${maxMainTextLength}` : '';
+    titleChar.textContent = `${titleLength} / ${maxTitleLength}`;
+
+    mainTextChar.textContent = `${mainTextLength} / ${maxMainTextLength}`;
 
     const isTitleTooLong = titleLength > maxTitleLength;
     const isMainTextTooLong = mainTextLength > maxMainTextLength;
 
-    titleError.textContent = isTitleTooLong ? errorMessage.titleTooLong : '';
-    mainTextError.textContent = isMainTextTooLong
-      ? errorMessage.mainTextTooLong
-      : '';
+    if (isTitleTooLong) {
+      titleError.textContent = errorMessage.titleTooLong;
+      titleError.classList.remove('isHidden');
+    } else {
+      titleError.classList.add('isHidden');
+    }
+    if (isMainTextTooLong) {
+      mainTextError.textContent = errorMessage.mainTextTooLong;
+      mainTextError.classList.remove('isHidden');
+    } else {
+      mainTextError.classList.add('isHidden');
+    }
+
     button.disabled = isTitleTooLong || isMainTextTooLong;
   }
 

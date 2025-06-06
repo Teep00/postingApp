@@ -52,10 +52,6 @@ button {
   display: none !important;
 }
 
-.isActive {
-  display: block;
-}
-
 /* ------------------ ユーザーネーム ------------------ */
 
 .myUserName {
@@ -100,6 +96,7 @@ button {
 /* -------- 新規投稿 フォーム -------- */
 
 .postForm {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -109,27 +106,58 @@ button {
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
 
-.postForm input,
-.postForm textarea {
-  margin-bottom: 3px;
+.newTitle,
+.newMainText {
+  margin-bottom: 50px;
   padding: 10px;
   font-size: 1rem;
 }
 
-.postForm input {
+.newTitle {
   width: 400px;
-  height: 50px;
+  height: 60px;
 }
 
-.postForm textarea {
+.newMainText {
   width: 402px;
-  height: 150px;
+  height: 230px;
 }
 
-.postForm button {
+.postFormInBtn {
   margin-top: 10px;
   width: 60px;
   height: 40px;
+}
+
+.titleChar,
+.mainTextChar {
+  color: white;
+}
+
+.titleChar {
+  position: absolute;
+  top: 164px;
+  right: 50px;
+}
+
+.mainTextChar {
+  position: absolute;
+  top: 464px;
+  right: 42px;
+}
+
+.titleRequired,
+.titleCharError {
+  position: absolute;
+  top: 170px;
+  right: 153px;
+}
+
+.mainTextRequired,
+.mainTextCharError {
+  position: absolute;
+  top: 470px;
+  right: 165px;
 }
 
 /* ↓新規投稿・投稿編集時に使用↓ */
@@ -199,7 +227,7 @@ button {
   align-items: center;
 }
 
-.newPost {
+.post {
   display: flex;
   flex-direction: column;
   width: 350px;
@@ -214,7 +242,7 @@ button {
   visibility: hidden;
 }
 
-.newPost.visible {
+.post.visible {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
@@ -265,18 +293,6 @@ button {
   line-height: 28px;
 }
 
-/* -------- 新規投稿 -------- */
-
-.newTitle {
-  margin-bottom: 10px;
-  width: 400px;
-  height: 70px;
-}
-.newMainText {
-  width: 400px;
-  height: 200px;
-}
-
 /* -------- 投稿内ボタンエリア -------- */
 
 .buttonContainer {
@@ -298,6 +314,10 @@ button {
   align-items: center;
   padding: 10px;
   height: 45px;
+  background-color: rgb(195, 195, 195);
+  border-radius: 10%;
+  color: rgb(0, 0, 0);
+  font-weight: 500;
   transition: 0.5s;
 }
 
@@ -346,16 +366,19 @@ button {
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
 
+.editButton {
+  background-color: rgb(195, 195, 195);
+  border-radius: 10%;
+  color: rgb(0, 0, 0);
+  font-weight: 500;
+}
+
 .editTitle,
 .editMainText {
   background-color: white;
   width: 90px;
   margin: 0;
   text-align: center;
-}
-
-.edited {
-  display: none;
 }
 
 .editFormInBtn {
@@ -408,15 +431,17 @@ button {
   margin: 20px;
 }
 
-.errorContainer {
+.userNameErrorContainer,
+.userIdErrorContainer,
+.passwordErrorContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  width: 80%;
 }
 
 .errorMessage {
+  margin: 0 auto;
+  text-align: center;
   color: red;
   font-size: 13px;
   font-weight: 300;
@@ -459,16 +484,14 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px 50px;
+  padding: 20px 50px;
   background-color: rgb(25, 25, 25);
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
 
 .signupUserNameArea,
 .signupUserIdArea,
-.signupPasswordArea,
-.loginUserIdArea,
-.loginPasswordArea {
+.signupPasswordArea {
   margin: 18px 0 20px 0;
   display: flex;
   flex-direction: column;
@@ -528,6 +551,11 @@ button {
 
 /* -------- サインアップ -------- */
 
+.signupForm {
+  width: 320px;
+  height: 500px;
+}
+
 .signupBtn {
   position: fixed;
   right: 140px;
@@ -540,6 +568,11 @@ button {
 }
 
 /* -------- ログイン -------- */
+
+.loginForm {
+  width: 320px;
+  height: 380px;
+}
 
 .loginBtn,
 .logoutBtn {
@@ -581,4 +614,12 @@ button {
     opacity: 0;
     transform: translate(-50%, -50%) translateY(-20px);
   }
+}
+
+.loginUserIdArea,
+.loginPasswordArea {
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

@@ -2,30 +2,65 @@
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { getAllPosts } from '../utils/allPost.js';
 import { enterClick } from '../utils/keyEvent.js';
-import { showError, resetAllErrors } from '../utils/errorMessage.js';
+import { createElementWithClasses } from '../utils/domFactory.js';
+import {
+  showError,
+  resetAllErrors,
+  errorMessage,
+} from '../utils/errorMessage.js';
 
 // フィルター
 export function handleSearch(search, showAll) {
   search.addEventListener('click', () => {
-    const searchForm = document.createElement('form');
-    searchForm.innerHTML = `
-    <h2>ユーザーネームで検索</h2>
-    <input type="text" placeholder="ここへ入力" class="searchInput" /> 
-    <div class="errorContainer">
-      <p class="errorMessage isHidden searchWordRequired">検索ワードを入力してください</p>
-      <p class="errorMessage isHidden searchNotFoundUser">一致するユーザーが見つかりませんでした</p>
-    </div>
-    <button type="button" class="searchButton">実行</button>
-  `;
+    const searchForm = createElementWithClasses('form', 'searchForm');
 
-    searchForm.classList.add('searchForm');
+    const searchPostSctionTitle = createElementWithClasses(
+      'h2',
+      'searchPostSctionTitle'
+    );
+    searchPostSctionTitle.textContent = 'ユーザーネームで検索';
+
+    const searchInput = createElementWithClasses('input', 'searchInput');
+    searchInput.type = 'text';
+    searchInput.placeholder = 'ここへ入力';
+
+    const errorContainer = createElementWithClasses('div', 'errorContainer');
+
+    const searchWordRequired = createElementWithClasses(
+      'p',
+      'searchWordRequired',
+      'errorMessage',
+      'isHidden'
+    );
+    searchWordRequired.textContent = '検索ワードを入力してください';
+
+    const searchNotFoundUser = createElementWithClasses(
+      'p',
+      'searchNotFoundUser',
+      'errorMessage',
+      'isHidden'
+    );
+    searchNotFoundUser.textContent = '一致するユーザーが見つかりませんでした';
+
+    const searchButton = createElementWithClasses('button', 'searchButton');
+    searchButton.type = 'button';
+    searchButton.textContent = '実行';
+
+    searchForm.append(
+      searchPostSctionTitle,
+      searchInput,
+      errorContainer,
+      searchButton
+    );
+    errorContainer.append(searchWordRequired, searchNotFoundUser);
+
     const overlayElement = createOverlayWithContent(searchForm);
-    const searchButton = searchForm.querySelector('.searchButton');
+
+    enterClick(searchForm, searchButton);
 
     searchButton.addEventListener('click', (e) => {
       e.preventDefault();
-      resetAllErrors(searchForm, '.errorMessage');
-      enterClick(searchForm, searchButton);
+      resetAllErrors(searchForm);
 
       const inputValue = searchForm
         .querySelector('.searchInput')
@@ -33,7 +68,11 @@ export function handleSearch(search, showAll) {
         .toLowerCase();
 
       if (!inputValue) {
-        showError(searchForm, '.searchWordRequired');
+        showError(
+          searchForm,
+          '.searchWordRequired',
+          errorMessage.searchWordRequired
+        );
         return;
       }
 
@@ -46,22 +85,23 @@ export function handleSearch(search, showAll) {
 
         if (userName && userName.includes(inputValue)) {
           post.classList.remove('isHidden');
-          post.classList.add('isActive');
           matchFound = true;
         } else {
           post.classList.add('isHidden');
-          post.classList.remove('isActive');
         }
       });
 
       if (!matchFound) {
-        showError(searchForm, '.searchNotFoundUser');
+        showError(
+          searchForm,
+          '.searchNotFoundUser',
+          errorMessage.searchNotFoundUser
+        );
         showAll.click();
         return;
       }
 
       showAll.classList.remove('isHidden');
-      showAll.classList.add('isActive');
       overlayElement.remove();
     });
     clickedOverlay(searchForm, overlayElement);
@@ -70,9 +110,7 @@ export function handleSearch(search, showAll) {
   showAll.addEventListener('click', () => {
     getAllPosts().forEach((post) => {
       post.classList.remove('isHidden');
-      post.classList.add('isActive');
     });
     showAll.classList.add('isHidden');
-    showAll.classList.remove('isActive');
   });
 }

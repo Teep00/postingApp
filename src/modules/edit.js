@@ -1,72 +1,52 @@
 // インポート
-import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
-import { charLimit } from '../utils/charLimit.js';
-import { enterSubmit } from '../utils/keyEvent.js';
 import { currentDate } from '../utils/time.js';
+import { createPostForm } from '../utils/domFactory.js';
+import { resetAllErrors } from '../utils/errorMessage.js';
 
 // 編集ボタン
-export function handleEdit(postElement, { id, userId }) {
+export function handleEdit(postElement, { id }) {
   const title = postElement.querySelector('.title').textContent;
   const mainText = postElement.querySelector('.mainText').textContent;
 
-  const editForm = document.createElement('form');
-  editForm.classList.add('editForm');
-  editForm.innerHTML = `
-    <h2>投稿編集</h2>
-    <div><p class="editTitle">タイトル</p><input class="newTitle" placeholder="${title}"></div>
-    <div class="errorContainer">
-      <p id="titleError" class="errorMessage"></p>
-      <p id="titleChar" class="char"></p>
-    </div>
-    <div><p class="editMainText">本文</p><textarea class="newMainText" placeholder="${mainText}"></textarea></div>
-    <div class="errorContainer">
-      <p id="mainTextError" class="errorMessage"></p>
-      <p id="mainTextChar" class="char"></p>
-    </div>
-    <button type="submit" class="editFormInBtn">保存</button>
-  `;
+  const {
+    form: editForm,
+    overlayElement,
+    elements,
+  } = createPostForm({
+    sectionTitleText: '投稿編集',
+    placeholderTitle: title,
+    placeholderMainText: mainText,
+    submitText: '保存',
+  });
 
-  const overlayElement = createOverlayWithContent(editForm);
-  const saveButton = editForm.querySelector('button');
-
-  const titleInput = editForm.querySelector('.newTitle');
-  const mainTextInput = editForm.querySelector('.newMainText');
-  const titleError = editForm.querySelector('#titleError');
-  const mainTextError = editForm.querySelector('#mainTextError');
-  const titleChar = editForm.querySelector('#titleChar');
-  const mainTextChar = editForm.querySelector('#mainTextChar');
-  const editFormInBtn = editForm.querySelector('.editFormInBtn');
-
-  clickedOverlay(editForm, overlayElement);
-
-  charLimit(
-    titleInput,
-    mainTextInput,
-    titleError,
-    mainTextError,
-    titleChar,
-    mainTextChar,
-    editFormInBtn
-  );
+  const { newTitle, newMainText, postFormInBtn } = elements;
 
   editForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (editFormInBtn.disabled) return;
+    resetAllErrors(editForm);
 
-    enterSubmit(editForm);
+    const inputTitle = newTitle.value.trim();
+    const inputMainText = newMainText.value.trim();
 
-    const newTitle = editForm.querySelector('.newTitle').value.trim() || title;
-    const newMainText =
-      editForm.querySelector('.newMainText').value.trim() || mainText;
+    if (postFormInBtn.disabled) return;
 
-    postElement.querySelector('.title').textContent = newTitle;
-    postElement.querySelector('.mainText').textContent = newMainText;
+    const oldTitle = postElement.querySelector('.title').textContent;
+    const oldMainText = postElement.querySelector('.mainText').textContent;
 
-    editForm.querySelector('.newTitle').placeholder = newTitle;
-    editForm.querySelector('.newMainText').placeholder = newMainText;
+    if (!inputTitle && !inputMainText) {
+      overlayElement.remove();
+    }
+
+    const editedTitle = inputTitle || oldTitle;
+    const editedMainText = inputMainText || oldMainText;
+
+    postElement.querySelector('.title').textContent = editedTitle;
+    postElement.querySelector('.mainText').textContent = editedMainText;
 
     currentDate(postElement);
-    postElement.querySelector('.edited').style.display = 'block';
+
+    const timeArea = postElement.querySelector('.timeArea p');
+    timeArea.classList.remove('isHidden');
 
     if (id > 100) {
       overlayElement.remove();
@@ -74,10 +54,13 @@ export function handleEdit(postElement, { id, userId }) {
     }
     /*--- 常に新規投稿のidは101となるため、ここから先のfetchは行われない ---*/
 
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+    fetch(`http://localhost:3000/posts/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTitle, body: newMainText, userId }),
+      body: JSON.stringify({
+        title: newTitle.value.trim(),
+        body: newMainText.value.trim(),
+      }),
     })
       .then((res) => {
         if (!res.ok) throw new Error('編集に失敗しました');

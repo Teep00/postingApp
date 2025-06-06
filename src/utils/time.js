@@ -20,6 +20,6 @@ export function currentDate(post) {
   <div class="time">
     ${curr.hours}:${curr.minutes}
   </div>
-  <p class="edited">(編集後)</p>
+  <p class="edited isHidden">(編集後)</p>
 `;
 }

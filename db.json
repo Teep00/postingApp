@@ -1,0 +1,23 @@
+{
+  "posts": [
+    {
+      "id": "91b9",
+      "title": "a",
+      "body": "a",
+      "userName": "Teeep"
+    },
+    {
+      "id": "ae8e",
+      "title": "b",
+      "body": "b",
+      "userName": "Teeep"
+    },
+    {
+      "id": "b0e6",
+      "title": "c",
+      "body": "c",
+      "userName": "mapimapi"
+    }
+  ],
+  "users": []
+}

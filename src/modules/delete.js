@@ -8,7 +8,7 @@ export function handleDelete(postElement, id) {
     mainMessage: '本当に削除しますか？',
     affirmMessage: '削除',
     clickYesBtn: () => {
-      fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+      fetch(`http://localhost:3000/posts/${id}`, {
         method: 'DELETE',
       })
         .then((res) => {
