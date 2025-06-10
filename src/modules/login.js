@@ -4,6 +4,7 @@ import { myUserName } from '../utils/domElementList.js';
 import { createElementWithClasses } from '../utils/domFactory.js';
 import { showError, resetAllErrors } from '../utils/errorMessage.js';
 import { postsButtonVisibility } from '../utils/postView.js';
+import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
 
 export function handleLogin(loginBtn) {
   loginBtn.addEventListener('click', () => {
@@ -185,6 +186,7 @@ export function handleLogin(loginBtn) {
       if (hasError) return;
 
       localStorage.setItem('currentUser', JSON.stringify(foundUser));
+      likeButtonDisabled();
 
       /*---------------- ボタンの表示・非表示切り替え ----------------- */
       postsButtonVisibility(true);
@@ -198,32 +200,3 @@ export function handleLogin(loginBtn) {
     clickedOverlay(loginForm, overlayElement);
   });
 }
-
-// const loginForm = document.createElement('form');
-// loginForm.innerHTML = `
-// <h2>ログイン</h2>
-// <div class="loginUserIdArea">
-//   <h3>ユーザーID</h3>
-//   <div class="loginUserIdOuter">
-//     <input type="text" class="loginUserIdInput" name="userId"  maxlength="15" >
-//   </div>
-//   <div class="errorContainer">
-//     <p class="errorMessage isHidden userIdRequired">ユーザーIDが入力されていません</p>
-//   </div>
-// </div>
-// <div class="loginPasswordArea">
-//   <h3>パスワード</h3>
-//   <div class="loginPasswordOuter">
-//     <input type="password" class="loginPasswordInput" name="password"  maxlength="15" >
-//     </div>
-//     <div class="errorContainer">
-//       <p class="errorMessage isHidden passwordRequired">パスワードが入力されていません</p>
-//     </div>
-//     <p class="errorMessage isHidden loginFaild">ユーザーIDまたはパスワードが間違っています</p>
-//   </div>
-// <button type="submit" class="loginFormInBtn">ログイン</button>
-// `;
-// loginForm.classList.add('loginForm');
-
-// const loginUserIdInput = loginForm.querySelector('.loginUserIdInput');
-// const loginPasswordInput = loginForm.querySelector('.loginPasswordInput');

@@ -40,13 +40,19 @@ export function newPostCreate(newPostCreateBtn) {
       fetch('http://localhost:3000/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, body, userName: currentUser.userName }),
+        body: JSON.stringify({
+          title,
+          body,
+          userName: currentUser.userName,
+          createdAt: new Date().toISOString(),
+        }),
       })
         .then((res) => res.json())
         .then((data) => {
-          const postElement = createPostElement({
+          createPostElement({
             ...data,
             userName: currentUser.userName,
+            createdAt: new Date().toISOString(),
           });
           postsButtonVisibility(true);
           overlayElement.remove();

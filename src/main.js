@@ -16,11 +16,16 @@ import {
   logoutBtn,
 } from './utils/domElementList.js';
 import { getCurrentUser } from './utils/getCurrentUser.js';
+import { likeButtonDisabled } from './utils/likeButtonDisabled.js';
 
 // 初期投稿取得
 window.addEventListener('DOMContentLoaded', () => {
+  console.log('リロードが発生しました');
+
   getCurrentUser();
   fetchInitialPosts();
+  likeButtonDisabled();
+  sessionStorage.removeItem('hasShownWelcomeToast');
 });
 
 // 新規投稿作成

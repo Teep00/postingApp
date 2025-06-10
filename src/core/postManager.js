@@ -7,6 +7,7 @@ import { fadeInObserver } from '../utils/fadeInObserver.js';
 import { posts } from '../utils/domElementList.js';
 import { createElementWithClasses } from '../utils/domFactory.js';
 import { postsButtonVisibility } from '../utils/postView.js';
+import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
 
 // API呼び出し
 export function fetchInitialPosts() {
@@ -21,12 +22,13 @@ export function fetchInitialPosts() {
       });
 
       postsButtonVisibility(!!currentUser);
+      likeButtonDisabled();
     })
     .catch((err) => console.error(err.message));
 }
 
 // 投稿の操作
-export function createPostElement({ id, title, body, userName }) {
+export function createPostElement({ id, title, body, userName, createdAt }) {
   /*---------------------- DOM構築 ----------------------*/
 
   const post = createElementWithClasses('div', 'post', 'box');
@@ -75,28 +77,21 @@ export function createPostElement({ id, title, body, userName }) {
 
   /*----------------------------------------------------*/
 
-  post.appendChild(userInfo);
-  userInfo.appendChild(userNameEl);
-  post.appendChild(titleEl);
-  post.appendChild(mainTextEl);
-  post.appendChild(buttonContainer);
-  buttonContainer.appendChild(likeEditArea);
-  likeEditArea.appendChild(likeBtn);
-  likeBtn.appendChild(heartIcon);
-  likeBtn.appendChild(likesValue);
-  likeBtn.appendChild(like);
-  likeEditArea.appendChild(editBtn);
-  buttonContainer.appendChild(deleteBtn);
-  post.appendChild(timeArea);
+  post.append(userInfo, titleEl, mainTextEl, buttonContainer, timeArea);
+  userInfo.append(userNameEl);
+  buttonContainer.append(likeEditArea, deleteBtn);
+  likeEditArea.append(likeBtn, editBtn);
+  likeBtn.append(heartIcon, likesValue, like);
 
-  const actualUserName = getUserName(post, userName);
+  const name = post.querySelector('.userName');
+  name.textContent = userName;
 
-  currentDate(post);
+  currentDate(createdAt, post);
 
   post.dataset.likes = '0';
   post.dataset.liked = 'false';
   post.dataset.id = id;
-  post.dataset.name = actualUserName;
+  post.dataset.name = name.textContent;
 
   (function textLimit(title, body) {
     const titleEl = post.querySelector('.title');
@@ -117,14 +112,4 @@ export function createPostElement({ id, title, body, userName }) {
   fadeInObserver.observe(post);
 
   return post;
-}
-
-// ユーザーネーム取得
-function getUserName(post, userName) {
-  const createName = faker.name.findName();
-  const thisName = post.querySelector('.userName');
-
-  thisName.textContent = userName ?? createName;
-
-  return thisName.textContent;
 }

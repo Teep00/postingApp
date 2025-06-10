@@ -14,9 +14,8 @@ export function postsButtonVisibility(isLogIn) {
     const editBtn = post.querySelector('.editButton');
     const deleteBtn = post.querySelector('.deleteButton');
     const postOwner = post.dataset.name;
-    console.log('postOwner:', postOwner, 'currentUser:', currentUser?.userName);
 
-    if (isLogIn && currentUser?.userName === postOwner) {
+    if (isLogIn && currentUser.userName === postOwner) {
       editBtn.classList.remove('isHidden');
       deleteBtn.classList.remove('isHidden');
     } else {
