@@ -25,7 +25,6 @@ window.addEventListener('DOMContentLoaded', () => {
   getCurrentUser();
   fetchInitialPosts();
   likeButtonDisabled();
-  sessionStorage.removeItem('hasShownWelcomeToast');
 });
 
 // 新規投稿作成

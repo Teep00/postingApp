@@ -37,6 +37,8 @@ export function newPostCreate(newPostCreateBtn) {
 
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
+      sessionStorage.setItem('newPostInProgress', 'true');
+
       fetch('http://localhost:3000/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,6 +58,8 @@ export function newPostCreate(newPostCreateBtn) {
           });
           postsButtonVisibility(true);
           overlayElement.remove();
+
+          sessionStorage.setItem('suppressWelcomeToast', 'true');
         })
         .catch((err) => console.error(err.message));
     });

@@ -9,7 +9,6 @@ import { createElementWithClasses } from '../utils/domFactory.js';
 import { postsButtonVisibility } from '../utils/postView.js';
 import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
 
-// API呼び出し
 export function fetchInitialPosts() {
   fetch('http://localhost:3000/posts')
     .then((res) => res.json())
