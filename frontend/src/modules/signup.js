@@ -63,7 +63,7 @@ export function showSignupForm(savedValues = {}) {
     elements.passwordCrossIcon
   );
 
-  signupForm.addEventListener('submit', (e) => {
+  signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     resetAllErrors(signupForm);
@@ -149,15 +149,25 @@ export function showSignupForm(savedValues = {}) {
       hasError = true;
     }
 
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const duplicateUserName = existingUsers.some(
-      (user) => user.userName === signupUserNameValue
-    );
-    const duplicateUserId = existingUsers.some(
-      (user) => user.userId === signupUserIdValue
-    );
+    if (hasError) return;
 
-    if (duplicateUserName) {
+    const [userNameRes, userIdRes] = await Promise.all([
+      fetch(
+        `http://localhost:3000/users?userName=${encodeURIComponent(
+          signupUserNameValue
+        )}`
+      ),
+      fetch(
+        `http://localhost:3000/users?userId=${encodeURIComponent(
+          signupUserIdValue
+        )}`
+      ),
+    ]);
+    const [userNameData, userIdData] = await Promise.all([
+      userNameRes.json(),
+      userIdRes.json(),
+    ]);
+    if (userNameData.length > 0) {
       showError(
         signupForm,
         '.duplicateUserName',
@@ -165,7 +175,7 @@ export function showSignupForm(savedValues = {}) {
       );
       hasError = true;
     }
-    if (duplicateUserId) {
+    if (userIdData.length > 0) {
       showError(
         signupForm,
         '.duplicateUserId',
@@ -180,13 +190,19 @@ export function showSignupForm(savedValues = {}) {
     createConfirmDialog({
       mainMessage: '登録内容を確定しますか？',
       affirmMessage: '登録',
-      clickYesBtn: () => {
-        existingUsers.push({
+      clickYesBtn: async () => {
+        const newUser = {
           userName: signupUserNameValue,
           userId: signupUserIdValue,
           password: signupPasswordValue,
+          likes: [],
+        };
+
+        await fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newUser),
         });
-        localStorage.setItem('users', JSON.stringify(existingUsers));
 
         showCenterToast('登録が完了しました！');
       },
@@ -385,7 +401,7 @@ function createSignupForm() {
     'input',
     'signupPasswordInput'
   );
-  signupPasswordInput.type = 'text';
+  signupPasswordInput.type = 'password';
   signupPasswordInput.maxlength = '20';
 
   const signupPasswordInner = createElementWithClasses(

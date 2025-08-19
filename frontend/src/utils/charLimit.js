@@ -1,5 +1,5 @@
 // インポート
-import { errorMessage } from '../utils/errorMessage.js';
+import { errorMessage } from './errorMessage.js';
 
 // 文字数制限
 export function charLimit(

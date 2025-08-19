@@ -85,13 +85,22 @@ export function handleLogin(loginBtn) {
     );
     passwordRequired.textContent = 'パスワードが入力されていません';
 
-    const loginFaild = createElementWithClasses(
+    const invalidCredentials = createElementWithClasses(
       'p',
-      'loginFaild',
+      'invalidCredentials',
       'isHidden',
       'errorMessage'
     );
-    loginFaild.textContent = 'ユーザーIDまたはパスワードが間違っています';
+    invalidCredentials.textContent =
+      'ユーザーIDまたはパスワードが間違っています';
+
+    const loginRequestError = createElementWithClasses(
+      'p',
+      'loginRequestError',
+      'isHidden',
+      'errorMessage'
+    );
+    loginRequestError.textContent = 'ログインに失敗しました';
 
     const loginFormInBtn = createElementWithClasses('button', 'loginFormInBtn');
     loginFormInBtn.textContent = 'ログイン';
@@ -118,37 +127,45 @@ export function handleLogin(loginBtn) {
       loginPasswordErrorContainer
     );
     loginPasswordOuter.append(loginPasswordInput);
-    loginPasswordErrorContainer.append(passwordRequired, loginFaild);
+    loginPasswordErrorContainer.append(
+      passwordRequired,
+      invalidCredentials,
+      loginRequestError
+    );
 
     const overlayElement = createOverlayWithContent(loginForm);
 
     loginUserIdInput.addEventListener('input', () => {
-      loginUserIdInput.value = loginUserIdInput.value.replace(
-        /[^a-zA-Z0-9]/g,
-        ''
-      );
+      loginUserIdInput.value = loginUserIdInput.value
+        .replace(/[^a-zA-Z0-9]/g, '')
+        .trim();
     });
     loginPasswordInput.addEventListener('input', () => {
-      loginPasswordInput.value = loginPasswordInput.value.replace(
-        /[^a-zA-Z0-9]/g,
-        ''
-      );
+      loginPasswordInput.value = loginPasswordInput.value
+        .replace(/[^a-zA-Z0-9]/g, '')
+        .trim();
     });
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       resetAllErrors(loginForm);
 
-      const userId = loginUserIdInput.value.trim();
-      const password = loginPasswordInput.value.trim();
+      const inputUserId = loginUserIdInput.value.trim();
+      const inputPassword = loginPasswordInput.value.trim();
 
-      const users = JSON.parse(localStorage.getItem('users')) || [];
+      let users = [];
+      try {
+        users = await fetch('http://localhost:3000/users').then((res) =>
+          res.json()
+        );
+      } catch (error) {
+        showError(loginForm, '.loginRequestError', 'ログインに失敗しました');
+      }
 
       let hasError = false;
       let foundUser = null;
 
       if (loginUserIdInput.value.length === 0) {
-        console.log('ユーザーID未入力');
         showError(
           loginForm,
           '.userIdRequired',
@@ -157,7 +174,6 @@ export function handleLogin(loginBtn) {
         hasError = true;
       }
       if (loginPasswordInput.value.length === 0) {
-        console.log('パスワード未入力');
         showError(
           loginForm,
           '.passwordRequired',
@@ -169,14 +185,12 @@ export function handleLogin(loginBtn) {
       if (!hasError) {
         foundUser = users.find(
           (user) =>
-            user.userId === loginUserIdInput.value &&
-            user.password === loginPasswordInput.value
+            user.userId === inputUserId && user.password === inputPassword
         );
         if (!foundUser) {
-          console.log('ユーザー見つからず');
           showError(
             loginForm,
-            '.loginFaild',
+            '.invalidCredentials',
             'ユーザーIDまたはパスワードが間違っています'
           );
           return;
@@ -192,7 +206,6 @@ export function handleLogin(loginBtn) {
       postsButtonVisibility(true);
       /*---------------------------------------------------------- */
 
-      console.log('ログイン成功！');
       overlayElement.remove();
       myUserName.textContent = foundUser.userName;
       showCenterToast(`ようこそ！${foundUser.userName}さん！`);

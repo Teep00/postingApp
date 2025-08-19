@@ -32,6 +32,8 @@ export const errorMessage = {
   duplicateUserName: 'このユーザーネームは既に使われています',
   duplicateUserId: 'このユーザーIDは既に使われています',
 
-  loginFaild: 'ユーザーIDまたはパスワードが間違っています',
+  invalidCredentials: 'ユーザーIDまたはパスワードが間違っています',
+  loginRequestError: 'ログインに失敗しました',
+
   searchNotFoundUser: '一致するユーザーが見つかりませんでした',
 };

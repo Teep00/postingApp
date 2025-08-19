@@ -5,29 +5,25 @@
       "title": "ダミータイトル1",
       "body": "これはダミー本文です。",
       "userName": "Alice",
-      "createdAt": "2025-06-04T13:22:00.000Z"
+      "createdAt": "2025-06-04T13:22:00.000Z",
+      "likes": 1
     },
     {
       "id": "2",
       "title": "ダミータイトル2",
       "body": "テスト用の投稿です。",
       "userName": "Bob",
-      "createdAt": "2025-06-03T13:20:00.000Z"
-    },
-    {
-      "id": "30d4",
-      "title": "a",
-      "body": "a",
-      "userName": "Teeep",
-      "createdAt": "2025-06-11T09:33:28.202Z"
-    },
-    {
-      "id": "2ce5",
-      "title": "b",
-      "body": "b",
-      "userName": "mapimapi",
-      "createdAt": "2025-06-11T09:33:53.328Z"
+      "createdAt": "2025-06-03T13:20:00.000Z",
+      "likes": 1
     }
   ],
-  "users": []
+  "users": [
+    {
+      "id": "727a",
+      "userName": "Teeep",
+      "userId": "aaaaa",
+      "password": "aaaaa",
+      "likes": []
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 // インポート
-import { createOverlayWithContent } from '../utils/overlay.js';
+import { createOverlayWithContent } from './overlay.js';
 
 // 確認画面表示
 export function createConfirmDialog({
@@ -21,7 +21,8 @@ export function createConfirmDialog({
 
   const overlayElement = createOverlayWithContent(confirmBox);
 
-  confirmBox.querySelector('.yesButton').addEventListener('click', () => {
+  confirmBox.querySelector('.yesButton').addEventListener('click', (e) => {
+    e.preventDefault();
     overlayElement.remove();
     clickYesBtn();
   });

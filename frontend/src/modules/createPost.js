@@ -47,6 +47,7 @@ export function newPostCreate(newPostCreateBtn) {
           body,
           userName: currentUser.userName,
           createdAt: new Date().toISOString(),
+          likes: [],
         }),
       })
         .then((res) => res.json())

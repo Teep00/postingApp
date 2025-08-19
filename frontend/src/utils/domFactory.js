@@ -11,8 +11,8 @@ export function createElementWithClasses(tag, ...classes) {
 
 export function createPostForm({
   sectionTitleText = '新規投稿',
-  placeholderTitle = 'タイトル',
-  placeholderMainText = '本文',
+  // placeholderTitle = 'タイトル',
+  // placeholderMainText = '本文',
   submitText = '送信',
 } = {}) {
   const postForm = createElementWithClasses('form', 'postForm');
@@ -20,9 +20,17 @@ export function createPostForm({
   const sectionTitle = createElementWithClasses('h2', 'sectionTitle');
   sectionTitle.textContent = sectionTitleText;
 
+  const newTitleArea = createElementWithClasses('div', 'newTitleArea');
+
+  const newTitleInputTitle = createElementWithClasses(
+    'h3',
+    'newTitleInputTitle'
+  );
+  newTitleInputTitle.textContent = 'タイトル';
+
   const newTitle = createElementWithClasses('input', 'newTitle');
   newTitle.type = 'text';
-  newTitle.placeholder = placeholderTitle;
+  // newTitle.placeholder = placeholderTitle;
 
   const titleErrorContainer = createElementWithClasses(
     'div',
@@ -46,8 +54,16 @@ export function createPostForm({
 
   titleErrorContainer.append(titleCharError, titleRequiredError, titleChar);
 
+  const newMainTextArea = createElementWithClasses('div', 'newMainTextArea');
+
+  const newMainTextInputTitle = createElementWithClasses(
+    'h3',
+    'newMainTextInputTitle'
+  );
+  newMainTextInputTitle.textContent = '本文';
+
   const newMainText = createElementWithClasses('textarea', 'newMainText');
-  newMainText.placeholder = placeholderMainText;
+  // newMainText.placeholder = placeholderMainText;
 
   const mainTextErrorContainer = createElementWithClasses(
     'div',
@@ -79,13 +95,13 @@ export function createPostForm({
   postFormInBtn.type = 'submit';
   postFormInBtn.textContent = submitText;
 
-  postForm.append(
-    sectionTitle,
-    newTitle,
-    titleErrorContainer,
+  postForm.append(sectionTitle, newTitleArea, newMainTextArea, postFormInBtn);
+
+  newTitleArea.append(newTitleInputTitle, newTitle, titleErrorContainer);
+  newMainTextArea.append(
+    newMainTextInputTitle,
     newMainText,
-    mainTextErrorContainer,
-    postFormInBtn
+    mainTextErrorContainer
   );
 
   const overlayElement = createOverlayWithContent(postForm);
