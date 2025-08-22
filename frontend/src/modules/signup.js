@@ -29,7 +29,6 @@ export function showSignupForm(savedValues = {}) {
           checkIcon.classList.add('isHidden');
         } else if (inputElement.value.length < 5) {
           crossIcon.classList.remove('isHidden');
-
           checkIcon.classList.add('isHidden');
         } else {
           crossIcon.classList.add('isHidden');
@@ -167,6 +166,10 @@ export function showSignupForm(savedValues = {}) {
       userNameRes.json(),
       userIdRes.json(),
     ]);
+
+    console.log('userNameData:', userNameData);
+    console.log('userIdData:', userIdData);
+
     if (userNameData.length > 0) {
       showError(
         signupForm,

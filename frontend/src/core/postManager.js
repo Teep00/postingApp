@@ -15,9 +15,6 @@ export function fetchInitialPosts() {
     .then((data) => {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-      // const postIds = data.map((item) => item.id);
-      // localStorage.setItem('postIds', JSON.stringify(postIds));
-
       data.forEach((item) => {
         const postElement = createPostElement(item);
         posts.prepend(postElement);
@@ -30,7 +27,14 @@ export function fetchInitialPosts() {
 }
 
 // 投稿の操作
-export function createPostElement({ id, title, body, userName, createdAt }) {
+export function createPostElement({
+  id,
+  title,
+  body,
+  userName,
+  userId,
+  createdAt,
+}) {
   /*---------------------- DOM構築 ----------------------*/
 
   const post = createElementWithClasses('div', 'post', 'box');
@@ -95,6 +99,8 @@ export function createPostElement({ id, title, body, userName, createdAt }) {
   post.dataset.id = id;
   post.dataset.name = name.textContent;
 
+  console.log(id, userName);
+
   (function textLimit(title, body) {
     const titleEl = post.querySelector('.title');
     const mainTextEl = post.querySelector('.mainText');
@@ -107,7 +113,7 @@ export function createPostElement({ id, title, body, userName, createdAt }) {
 
   deleteBtn.addEventListener('click', () => handleDelete(post, id));
   editBtn.addEventListener('click', () => handleEdit(post, { id }));
-  likeBtn.addEventListener('click', () => handleLike(post));
+  likeBtn.addEventListener('click', (event) => handleLike(post, event));
 
   posts.prepend(post);
 

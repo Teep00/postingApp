@@ -31,6 +31,8 @@ export function newPostCreate(newPostCreateBtn) {
         hasError = true;
       }
 
+      const id = Math.random().toString(36).slice(-8);
+
       if (hasError) return;
 
       if (postFormInBtn.disabled) return;
@@ -43,9 +45,11 @@ export function newPostCreate(newPostCreateBtn) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id,
           title,
           body,
           userName: currentUser.userName,
+          userId: currentUser.userId,
           createdAt: new Date().toISOString(),
           likes: [],
         }),
@@ -55,6 +59,7 @@ export function newPostCreate(newPostCreateBtn) {
           createPostElement({
             ...data,
             userName: currentUser.userName,
+            userId: currentUser.userId,
             createdAt: new Date().toISOString(),
           });
           postsButtonVisibility(true);

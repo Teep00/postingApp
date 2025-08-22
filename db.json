@@ -1,29 +1,68 @@
 {
   "posts": [
     {
-      "id": "1",
+      "id": "plfgltq8",
       "title": "ダミータイトル1",
       "body": "これはダミー本文です。",
+      "userId": "aaaaa",
       "userName": "Alice",
       "createdAt": "2025-06-04T13:22:00.000Z",
-      "likes": 1
+      "likes": 1,
+      "likedUsers": [
+        "aaaaa"
+      ]
     },
     {
-      "id": "2",
+      "id": "6eg061t2",
       "title": "ダミータイトル2",
       "body": "テスト用の投稿です。",
+      "userId": "bbbbb",
       "userName": "Bob",
       "createdAt": "2025-06-03T13:20:00.000Z",
-      "likes": 1
+      "likes": 0,
+      "likedUsers": []
+    },
+    {
+      "id": "9pp9zbgn",
+      "title": "d",
+      "body": "d",
+      "userName": "Teeep",
+      "userId": "ccccc",
+      "createdAt": "2025-08-21T10:52:56.378Z",
+      "likes": 1,
+      "likedUsers": [
+        "ccccc"
+      ]
     }
   ],
   "users": [
     {
-      "id": "727a",
-      "userName": "Teeep",
+      "userName": "Alice",
       "userId": "aaaaa",
       "password": "aaaaa",
-      "likes": []
+      "likedPosts": [
+        "plfgltq8"
+      ]
+    },
+    {
+      "userName": "Bob",
+      "userId": "bbbbb",
+      "password": "bbbbb",
+      "likedPosts": []
+    },
+    {
+      "userName": "Teeep",
+      "userId": "ccccc",
+      "password": "ccccc",
+      "likedPosts": [
+        "9pp9zbgn"
+      ]
+    },
+    {
+      "userName": "ddddd",
+      "userId": "ddddd",
+      "password": "ddddd",
+      "likedPosts": []
     }
   ]
 }
