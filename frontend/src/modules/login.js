@@ -1,3 +1,4 @@
+import { BASE_URL } from '../baseURL.js';
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { showCenterToast } from '../utils/toast.js';
 import { myUserName } from '../utils/domElementList.js';
@@ -155,9 +156,7 @@ export function handleLogin(loginBtn) {
 
       let users = [];
       try {
-        users = await fetch('http://localhost:3000/users').then((res) =>
-          res.json()
-        );
+        users = await fetch(`${BASE_URL}/users`).then((res) => res.json());
       } catch (error) {
         showError(loginForm, '.loginRequestError', 'ログインに失敗しました');
       }
@@ -201,6 +200,16 @@ export function handleLogin(loginBtn) {
 
       localStorage.setItem('currentUser', JSON.stringify(foundUser));
       likeButtonDisabled();
+
+      document.querySelectorAll('.post').forEach((post) => {
+        const heartIcon = post.querySelector('.heartIcon');
+        const postId = post.dataset.id;
+        if (foundUser.likedPosts.includes(String(postId))) {
+          heartIcon.classList.add('liked');
+        } else {
+          heartIcon.classList.remove('liked');
+        }
+      });
 
       /*---------------- ボタンの表示・非表示切り替え ----------------- */
       postsButtonVisibility(true);

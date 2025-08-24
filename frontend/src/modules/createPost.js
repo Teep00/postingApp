@@ -1,3 +1,4 @@
+import { BASE_URL } from '../baseURL.js';
 import { createPostElement } from '../core/postManager.js';
 import { createPostForm } from '../utils/domFactory.js';
 import {
@@ -41,7 +42,7 @@ export function newPostCreate(newPostCreateBtn) {
 
       sessionStorage.setItem('newPostInProgress', 'true');
 
-      fetch('http://localhost:3000/posts', {
+      fetch(`${BASE_URL}/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -51,7 +52,8 @@ export function newPostCreate(newPostCreateBtn) {
           userName: currentUser.userName,
           userId: currentUser.userId,
           createdAt: new Date().toISOString(),
-          likes: [],
+          likes: 0,
+          likedUsers: [],
         }),
       })
         .then((res) => res.json())
@@ -61,6 +63,8 @@ export function newPostCreate(newPostCreateBtn) {
             userName: currentUser.userName,
             userId: currentUser.userId,
             createdAt: new Date().toISOString(),
+            likes: 0,
+            likedUsers: [],
           });
           postsButtonVisibility(true);
           overlayElement.remove();

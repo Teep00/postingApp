@@ -1,4 +1,5 @@
 // インポート
+import { BASE_URL } from '../baseURL.js';
 import { createConfirmDialog } from '../utils/confirmDialog.js';
 
 // 削除ボタン
@@ -8,7 +9,7 @@ export function handleDelete(postElement, id) {
     mainMessage: '本当に削除しますか？',
     affirmMessage: '削除',
     clickYesBtn: () => {
-      fetch(`http://localhost:3000/posts/${id}`, {
+      fetch(`${BASE_URL}/posts/${id}`, {
         method: 'DELETE',
       })
         .then((res) => {

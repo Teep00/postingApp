@@ -1,4 +1,5 @@
 // インポート
+import { BASE_URL } from '../baseURL.js';
 import { currentDate } from '../../src/utils/time.js';
 import { handleDelete } from '../../src/modules/delete.js';
 import { handleEdit } from '../../src/modules/edit.js';
@@ -10,7 +11,7 @@ import { postsButtonVisibility } from '../../src/utils/postView.js';
 import { likeButtonDisabled } from '../../src/utils/likeButtonDisabled.js';
 
 export function fetchInitialPosts() {
-  fetch('http://localhost:3000/posts')
+  fetch(`${BASE_URL}/posts`)
     .then((res) => res.json())
     .then((data) => {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -34,7 +35,11 @@ export function createPostElement({
   userName,
   userId,
   createdAt,
+  likes,
+  likedUsers,
 }) {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
   /*---------------------- DOM構築 ----------------------*/
 
   const post = createElementWithClasses('div', 'post', 'box');
@@ -61,8 +66,14 @@ export function createPostElement({
     'fa-heart'
   );
 
+  if (currentUser && currentUser.likedPosts.includes(String(id))) {
+    heartIcon.classList.add('liked');
+  } else {
+    heartIcon.classList.remove('liked');
+  }
+
   const likesValue = createElementWithClasses('span', 'likesValue');
-  likesValue.textContent = '0';
+  likesValue.textContent = likes || 0;
 
   const like = createElementWithClasses('p', 'like');
   like.textContent = 'いいね';
@@ -81,8 +92,6 @@ export function createPostElement({
 
   const timeArea = createElementWithClasses('div', 'timeArea');
 
-  /*----------------------------------------------------*/
-
   post.append(userInfo, titleEl, mainTextEl, buttonContainer, timeArea);
   userInfo.append(userNameEl);
   buttonContainer.append(likeEditArea, deleteBtn);
@@ -92,14 +101,13 @@ export function createPostElement({
   const name = post.querySelector('.userName');
   name.textContent = userName;
 
+  /*----------------------------------------------------*/
+
   currentDate(createdAt, post);
 
-  post.dataset.likes = '0';
-  post.dataset.liked = 'false';
+  post.dataset.likes = likes || 0;
   post.dataset.id = id;
   post.dataset.name = name.textContent;
-
-  console.log(id, userName);
 
   (function textLimit(title, body) {
     const titleEl = post.querySelector('.title');

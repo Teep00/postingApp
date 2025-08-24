@@ -331,8 +331,10 @@ button {
 
 .heartIcon {
   margin: 0;
+  padding: 0;
   color: rgb(27, 27, 27);
   opacity: 0.8;
+  transition: 0.3s;
 }
 
 .likeButton:hover .heartIcon {
@@ -340,9 +342,9 @@ button {
   opacity: 0.9;
 }
 
-.heartIcon {
-  padding: 0;
-  transition: 0.3s;
+.liked {
+  color: rgb(245, 51, 84);
+  opacity: 0.9;
 }
 
 .likesValue {
@@ -350,7 +352,7 @@ button {
   margin: 0;
 }
 
-.like {
+.heartIcon.like {
   margin: 0;
 }
 

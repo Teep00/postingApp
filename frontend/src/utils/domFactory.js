@@ -11,8 +11,6 @@ export function createElementWithClasses(tag, ...classes) {
 
 export function createPostForm({
   sectionTitleText = '新規投稿',
-  // placeholderTitle = 'タイトル',
-  // placeholderMainText = '本文',
   submitText = '送信',
 } = {}) {
   const postForm = createElementWithClasses('form', 'postForm');
@@ -30,7 +28,6 @@ export function createPostForm({
 
   const newTitle = createElementWithClasses('input', 'newTitle');
   newTitle.type = 'text';
-  // newTitle.placeholder = placeholderTitle;
 
   const titleErrorContainer = createElementWithClasses(
     'div',
@@ -63,7 +60,6 @@ export function createPostForm({
   newMainTextInputTitle.textContent = '本文';
 
   const newMainText = createElementWithClasses('textarea', 'newMainText');
-  // newMainText.placeholder = placeholderMainText;
 
   const mainTextErrorContainer = createElementWithClasses(
     'div',

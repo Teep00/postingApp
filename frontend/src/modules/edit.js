@@ -1,4 +1,5 @@
 // インポート
+import { BASE_URL } from '../baseURL.js';
 import { createPostForm } from '../utils/domFactory.js';
 import { resetAllErrors } from '../utils/errorMessage.js';
 
@@ -47,7 +48,7 @@ export function handleEdit(postElement, { id }) {
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    fetch(`http://localhost:3000/posts/${id}`)
+    fetch(`${BASE_URL}/${id}`)
       .then((res) => res.json())
       .then((originalData) => {
         const updatedPost = {
@@ -57,7 +58,7 @@ export function handleEdit(postElement, { id }) {
           userName: currentUser.userName,
           createdAt: originalData.createdAt,
         };
-        return fetch(`http://localhost:3000/posts/${id}`, {
+        return fetch(`${BASE_URL}/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedPost),

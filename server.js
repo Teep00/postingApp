@@ -16,15 +16,14 @@ app.get('/users', async (req, res) => {
   const { userName, userId } = req.query;
   await db.read();
   let users = db.data.users;
+
   if (userName) {
     users = users.filter((user) => user.userName === userName);
   }
   if (userId) {
     users = users.filter((user) => user.userId === userId);
   }
-  if (users.length === 0) {
-    return res.status(404).json({ error: 'ユーザーが見つかりません' });
-  }
+
   res.json(users);
 });
 
@@ -46,14 +45,20 @@ app.post('/posts', async (req, res) => {
   res.status(201).json(newPost);
 });
 
+// 投稿削除ボタンの処理
 const sameId = (a, b) => String(a) === String(b);
-
 app.delete('/posts/:id', async (req, res) => {
-  const index = db.data.posts.findIndex((post) =>
-    sameId(post.id, req.params.id)
-  );
+  const postId = String(req.params.id);
+
+  const index = db.data.posts.findIndex((post) => sameId(post.id, postId));
   if (index === -1)
     return res.status(404).json({ error: '投稿が見つかりません' });
+
+  db.data.users.forEach((user) => {
+    user.likedPosts = user.likedPosts.filter(
+      (likedId) => !sameId(likedId, postId)
+    );
+  });
 
   const [deleted] = db.data.posts.splice(index, 1);
   await db.write();
@@ -90,7 +95,11 @@ app.patch('/posts/:postId/like', async (req, res) => {
 
   await db.write();
 
-  res.json({ likes: post.likes });
+  res.json({
+    likes: post.likes,
+    likedPosts: user.likedPosts,
+    likedUsers: post.likedUsers,
+  });
 });
 
 app.listen(3000, () => {

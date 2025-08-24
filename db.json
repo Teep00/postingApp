@@ -9,7 +9,7 @@
       "createdAt": "2025-06-04T13:22:00.000Z",
       "likes": 1,
       "likedUsers": [
-        "aaaaa"
+        "ccccc"
       ]
     },
     {
@@ -19,16 +19,6 @@
       "userId": "bbbbb",
       "userName": "Bob",
       "createdAt": "2025-06-03T13:20:00.000Z",
-      "likes": 0,
-      "likedUsers": []
-    },
-    {
-      "id": "9pp9zbgn",
-      "title": "d",
-      "body": "d",
-      "userName": "Teeep",
-      "userId": "ccccc",
-      "createdAt": "2025-08-21T10:52:56.378Z",
       "likes": 1,
       "likedUsers": [
         "ccccc"
@@ -40,9 +30,7 @@
       "userName": "Alice",
       "userId": "aaaaa",
       "password": "aaaaa",
-      "likedPosts": [
-        "plfgltq8"
-      ]
+      "likedPosts": []
     },
     {
       "userName": "Bob",
@@ -55,7 +43,8 @@
       "userId": "ccccc",
       "password": "ccccc",
       "likedPosts": [
-        "9pp9zbgn"
+        "plfgltq8",
+        "6eg061t2"
       ]
     },
     {
