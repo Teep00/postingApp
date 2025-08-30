@@ -1,116 +1,171 @@
 // インポート
+import { BASE_URL } from '../baseURL.js';
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
-import { getAllPosts } from '../utils/allPost.js';
+import { posts } from '../utils/domElementList.js';
 import { enterClick } from '../utils/keyEvent.js';
+import { postsButtonVisibility } from '../utils/postView.js';
 import { createElementWithClasses } from '../utils/domFactory.js';
 import {
   showError,
   resetAllErrors,
   errorMessage,
 } from '../utils/errorMessage.js';
+import { createPostElement } from '../core/postManager.js';
+import { scrollToTop } from '../utils/scrollToTop.js';
 
-// フィルター
+// ログイン中のユーザー情報を取得
+const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+// ------------------------------------------------------- //
+/*      投稿検索関数                                         */
+// ------------------------------------------------------- //
+
 export function handleSearch(search, showAll) {
   search.addEventListener('click', () => {
-    const searchForm = createElementWithClasses('form', 'searchForm');
+    // DOM構築
+    const { form: searchForm, overlayElement, elements } = createSerchForm();
 
-    const searchPostSctionTitle = createElementWithClasses(
-      'h2',
-      'searchPostSctionTitle'
-    );
-    searchPostSctionTitle.textContent = 'ユーザーネームで検索';
+    // Enterキーで送信
+    enterClick(searchForm, elements.searchButton);
 
-    const searchInput = createElementWithClasses('input', 'searchInput');
-    searchInput.type = 'text';
-    searchInput.placeholder = 'ここへ入力';
-
-    const errorContainer = createElementWithClasses('div', 'errorContainer');
-
-    const searchWordRequired = createElementWithClasses(
-      'p',
-      'searchWordRequired',
-      'errorMessage',
-      'isHidden'
-    );
-    searchWordRequired.textContent = '検索ワードを入力してください';
-
-    const searchNotFoundUser = createElementWithClasses(
-      'p',
-      'searchNotFoundUser',
-      'errorMessage',
-      'isHidden'
-    );
-    searchNotFoundUser.textContent = '一致するユーザーが見つかりませんでした';
-
-    const searchButton = createElementWithClasses('button', 'searchButton');
-    searchButton.type = 'button';
-    searchButton.textContent = '実行';
-
-    searchForm.append(
-      searchPostSctionTitle,
-      searchInput,
-      errorContainer,
-      searchButton
-    );
-    errorContainer.append(searchWordRequired, searchNotFoundUser);
-
-    const overlayElement = createOverlayWithContent(searchForm);
-
-    enterClick(searchForm, searchButton);
-
-    searchButton.addEventListener('click', (e) => {
+    elements.searchButton.addEventListener('click', (e) => {
+      // デフォルトのフォーム送信を防止
       e.preventDefault();
+
+      // 以前のエラーメッセージをリセット
       resetAllErrors(searchForm);
 
-      const inputValue = searchForm
-        .querySelector('.searchInput')
-        .value.trim()
-        .toLowerCase();
+      // 入力値を取得
+      const inputValue = searchForm.querySelector('.searchInput').value.trim();
 
+      // 検索ワードが空の場合のエラー
       if (!inputValue) {
         showError(
           searchForm,
           '.searchWordRequired',
           errorMessage.searchWordRequired
         );
+        elements.searchInputDiscription.classList.add('isHidden');
         return;
       }
 
-      const allPosts = getAllPosts();
-      let matchFound = false;
+      // 入力内容とデータベースのユーザーネームを照合
+      fetch(`${BASE_URL}/posts/${inputValue}/search`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.length === 0) {
+            showError(
+              searchForm,
+              '.searchNotFoundUser',
+              errorMessage.searchNotFoundUser
+            );
+            elements.searchInputDiscription.classList.add('isHidden');
+            loadAllPosts();
+            return;
+          }
+          posts.innerHTML = '';
 
-      allPosts.forEach((post) => {
-        const userNameEl = post.querySelector('.userName');
-        const userName = userNameEl?.textContent.trim().toLowerCase();
+          data.forEach((post) => {
+            createPostElement(post);
+          });
 
-        if (userName && userName.includes(inputValue)) {
-          post.classList.remove('isHidden');
-          matchFound = true;
-        } else {
-          post.classList.add('isHidden');
-        }
-      });
+          postsButtonVisibility(!!currentUser);
 
-      if (!matchFound) {
-        showError(
-          searchForm,
-          '.searchNotFoundUser',
-          errorMessage.searchNotFoundUser
-        );
-        showAll.click();
-        return;
-      }
+          showAll.classList.remove('isHidden');
 
-      showAll.classList.remove('isHidden');
-      overlayElement.remove();
+          scrollToTop();
+          overlayElement.remove();
+        })
+        .catch((err) => console.error(err.message));
     });
+    // オーバーレイをクリックした時の処理
     clickedOverlay(searchForm, overlayElement);
   });
 
+  // 表示投稿をリセット
   showAll.addEventListener('click', () => {
-    getAllPosts().forEach((post) => {
-      post.classList.remove('isHidden');
+    loadAllPosts().then(() => {
+      scrollToTop();
+      showAll.classList.add('isHidden');
     });
-    showAll.classList.add('isHidden');
   });
+}
+
+function loadAllPosts() {
+  return fetch(`${BASE_URL}/posts`)
+    .then((res) => res.json())
+    .then((data) => {
+      posts.innerHTML = '';
+      data.forEach((post) => createPostElement(post));
+      postsButtonVisibility(!!currentUser);
+    })
+    .catch((err) => console.error(err.message));
+}
+
+// ------------------------------------------------------- //
+/*      DOM構築関数                                         */
+// ------------------------------------------------------- //
+
+function createSerchForm() {
+  // フォーム全体
+  const searchForm = createElementWithClasses('form', 'searchForm');
+
+  const searchPostSctionTitle = createElementWithClasses(
+    'h2',
+    'searchPostSctionTitle'
+  );
+  searchPostSctionTitle.textContent = '検索';
+
+  const searchInput = createElementWithClasses('input', 'searchInput');
+  searchInput.type = 'text';
+
+  const searchInputDiscription = createElementWithClasses(
+    'p',
+    'searchInputDiscription'
+  );
+  searchInputDiscription.textContent = 'ユーザーネームを入力してください';
+
+  // エラー表示
+  const errorContainer = createElementWithClasses('div', 'errorContainer');
+
+  const searchWordRequired = createElementWithClasses(
+    'p',
+    'searchWordRequired',
+    'errorMessage',
+    'isHidden'
+  );
+  searchWordRequired.textContent = '検索ワードを入力してください';
+
+  const searchNotFoundUser = createElementWithClasses(
+    'p',
+    'searchNotFoundUser',
+    'errorMessage',
+    'isHidden'
+  );
+  searchNotFoundUser.textContent = '一致するユーザーが見つかりませんでした';
+
+  const searchButton = createElementWithClasses('button', 'searchButton');
+  searchButton.type = 'button';
+  searchButton.textContent = '実行';
+
+  // append処理
+  searchForm.append(
+    searchPostSctionTitle,
+    searchInput,
+    searchInputDiscription,
+    errorContainer,
+    searchButton
+  );
+  errorContainer.append(searchWordRequired, searchNotFoundUser);
+
+  // オーバーレイ作成
+  const overlayElement = createOverlayWithContent(searchForm);
+
+  // 各要素をオブジェクトにまとめて返す
+  const elements = {
+    searchInputDiscription,
+    searchButton,
+  };
+
+  return { form: searchForm, overlayElement, elements };
 }

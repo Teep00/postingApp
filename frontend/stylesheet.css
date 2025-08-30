@@ -1,5 +1,3 @@
-/* -------- 共通 -------- */
-
 body {
   width: 500px;
   margin: 0 auto;
@@ -80,9 +78,21 @@ button {
 }
 
 #operationArea button {
-  padding: 30px 5px;
+  width: 45px;
+  height: 120px;
   background-color: black;
+}
+
+.newPostCreate,
+.sort,
+.search,
+.showAll {
+  display: flex;
+  align-items: center;
+  height: 120px;
   opacity: 0.7;
+  transition: 0.3s ease;
+  position: relative;
 }
 
 #operationArea button svg {
@@ -91,6 +101,37 @@ button {
 
 #operationArea button:hover svg {
   transform: scale(1.33);
+}
+
+.newPostCreateText p,
+.sortText p,
+.searchText p,
+.showAllText p {
+  color: white;
+  font-size: 16px;
+  margin: 0;
+}
+
+.newPostCreateText,
+.sortText,
+.searchText,
+.showAllText {
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  transform: translate(-20px, -50%);
+  opacity: 0;
+  transition: all 0.4s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.newPostCreate:hover .newPostCreateText,
+.sort:hover .sortText,
+.search:hover .searchText,
+.showAll:hover .showAllText {
+  transform: translate(0, -50%);
+  opacity: 1;
 }
 
 /* -------- 新規投稿 フォーム -------- */
@@ -181,21 +222,24 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 30px 80px 50px 80px;
   background-color: rgb(25, 25, 25);
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
+}
+
+.sortForm button {
+  margin: 1px 0;
 }
 
 .sortLikeValueArea,
 .sortPostingTimeArea {
   display: flex;
   flex-direction: column;
-  padding-top: 5px;
 }
 
 .sortForm button {
-  width: 150px;
-  height: 40px;
+  width: 250px;
+  height: 45px;
 }
 
 /* -------- 投稿絞り込み フォーム -------- */
@@ -205,7 +249,7 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 30px 60px;
   background-color: rgb(25, 25, 25);
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
@@ -215,7 +259,7 @@ button {
 }
 
 .searchInput {
-  width: 200px;
+  width: 250px;
   height: 50px;
 }
 
@@ -223,6 +267,13 @@ button {
   margin-top: 20px;
   width: 70px;
   height: 40px;
+}
+.searchInputDiscription {
+  margin: 0;
+  text-align: center;
+  color: #b4b4b4;
+  font-size: 12.5px;
+  font-weight: 300;
 }
 
 /* ------------------ 投稿のデザイン ------------------ */
@@ -239,7 +290,7 @@ button {
   display: flex;
   flex-direction: column;
   width: 350px;
-  margin: 190px 0;
+  margin: 250px 0;
   padding: 70px 110px;
   background-color: rgb(27, 27, 27);
   box-shadow: 1px 0 11px 0 rgb(165, 165, 165);
@@ -538,17 +589,6 @@ button {
   display: flex;
 }
 
-.userNameCheckIcon,
-.userNameCrossIcon,
-.userIdCheckIcon,
-.userIdCrossIcon,
-.passwordCheckIcon,
-.passwordCrossIcon {
-  position: absolute;
-  top: 0;
-  right: -30px;
-}
-
 .signupUserNameDiscription,
 .signupUserIdDiscription,
 .signupPasswordDiscription {
@@ -633,4 +673,18 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* ------------------ 最上段にスクロールするボタン ------------------ */
+
+.scrollToTopBtn {
+  position: fixed;
+  bottom: 35px;
+  right: 35px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.scrollToTopBtn:hover {
+  transform: scale(1.15);
 }

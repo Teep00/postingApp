@@ -1,13 +1,18 @@
 // インポート
-import { BASE_URL } from '../baseURL.js';
+import { BASE_URL } from '../core/baseURL.js';
 import { createPostForm } from '../utils/domFactory.js';
 import { resetAllErrors } from '../utils/errorMessage.js';
 
-// 編集ボタン
-export function handleEdit(postElement, { id }) {
+// ------------------------------------------------------- //
+/*      投稿編集関数                                         */
+// ------------------------------------------------------- //
+
+export function handleEdit(postElement) {
+  // 既存のタイトルと本文を取得
   const title = postElement.querySelector('.title').textContent;
   const mainText = postElement.querySelector('.mainText').textContent;
 
+  // DOM構築
   const {
     form: editForm,
     overlayElement,
@@ -19,58 +24,62 @@ export function handleEdit(postElement, { id }) {
     submitText: '保存',
   });
 
+  // フォームの要素を取得
   const { newTitle, newMainText, postFormInBtn } = elements;
 
-  editForm.addEventListener('submit', (e) => {
+  // 既存のタイトルと本文をフォームにセット
+  elements.newTitle.value = title;
+  elements.newMainText.value = mainText;
+
+  // 保存ボタンをクリックしたときの処理
+  postFormInBtn.addEventListener('click', (e) => {
+    // デフォルトのフォーム送信を防止
     e.preventDefault();
+
+    // 以前のエラーメッセージをリセット
     resetAllErrors(editForm);
 
-    const inputTitle = newTitle.value.trim();
-    const inputMainText = newMainText.value.trim();
+    // 入力値を取得
+    const inputTitle = newTitle.value;
+    const inputMainText = newMainText.value;
 
+    // タイトルか本文が文字数制限を超えている場合は保存ボタンを無効化
     if (postFormInBtn.disabled) return;
 
-    const oldTitle = postElement.querySelector('.title').textContent;
-    const oldMainText = postElement.querySelector('.mainText').textContent;
-
+    // タイトルと本文が両方とも空の場合はオーバーレイを閉じる
     if (!inputTitle && !inputMainText) {
       overlayElement.remove();
     }
 
-    const editedTitle = inputTitle || oldTitle;
-    const editedMainText = inputMainText || oldMainText;
+    // 変更されていない場合は元の値を使用
+    const editedTitle = inputTitle || title;
+    const editedMainText = inputMainText || mainText;
 
-    postElement.querySelector('.title').textContent = editedTitle;
-    postElement.querySelector('.mainText').textContent = editedMainText;
+    // タイトルと本文が両方とも変更されていない場合は、
+    //'編集後'という表示を出さずにオーバーレイを閉じる
+    if (inputTitle === title && inputMainText === mainText) {
+      overlayElement.remove();
+      return;
+    }
 
-    const timeArea = postElement.querySelector('.timeArea p');
-    timeArea.classList.remove('isHidden');
-
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    fetch(`${BASE_URL}/${id}`)
+    // 投稿を編集してサーバーのデータを更新
+    fetch(`${BASE_URL}/posts/${postElement.dataset.id}/edit`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: editedTitle,
+        body: editedMainText,
+      }),
+    })
       .then((res) => res.json())
-      .then((originalData) => {
-        const updatedPost = {
-          id: originalData.id,
-          title: newTitle.value.trim(),
-          body: newMainText.value.trim(),
-          userName: currentUser.userName,
-          createdAt: originalData.createdAt,
-        };
-        return fetch(`${BASE_URL}/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedPost),
-        });
-      })
-      .then((res) => {
-        if (!res.ok) throw new Error('編集に失敗しました');
-        return res.json();
-      })
       .then((data) => {
+        postElement.querySelector('.title').textContent = data.title;
+        postElement.querySelector('.mainText').textContent = data.body;
+        postElement.querySelector('.edited').classList.remove('isHidden');
         overlayElement.remove();
       })
-      .catch((err) => console.error(err.message));
+      .catch((err) => {
+        console.error(err);
+      });
   });
 }

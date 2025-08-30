@@ -1,7 +1,10 @@
 // インポート
 import { createOverlayWithContent } from './overlay.js';
 
-// 確認画面表示
+// ------------------------------------------------------- //
+/*      確認画面表示関数                                      */
+// ------------------------------------------------------- //
+
 export function createConfirmDialog({
   mainMessage = '確認',
   affirmMessage = 'OK',

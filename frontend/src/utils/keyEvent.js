@@ -1,4 +1,7 @@
-// Enterキーでclickイベント発火
+// ------------------------------------------------------- //
+/*      エンターキークリックイベント関数                        */
+// ------------------------------------------------------- //
+
 export function enterClick(clickForm, clickBtn) {
   clickForm.querySelectorAll('input').forEach((input) =>
     input.addEventListener('keydown', (e) => {

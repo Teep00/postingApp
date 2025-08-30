@@ -1,23 +1,24 @@
+// インポート
 import { myUserName } from './domElementList.js';
 import { showCenterToast } from './toast.js';
 import { postsButtonVisibility } from './postView.js';
 
+// ------------------------------------------------------- //
+/*      ログインユーザー取得・更新関数                          */
+// ------------------------------------------------------- //
+
 export function getCurrentUser() {
+  // ローカルストレージから現在のユーザー情報を取得
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  const hasShownToast = sessionStorage.getItem('hasShownWelcomeToast');
-  const suppressToast = sessionStorage.getItem('suppressWelcomeToast');
 
-  if (suppressToast) {
-    sessionStorage.removeItem('suppressWelcomeToast');
-    return;
-  }
+  // 直前にログインした場合はウェルカムメッセージを表示しない
+  const loggedIn = sessionStorage.getItem('loggedIn');
+  if (loggedIn) return;
 
-  if (currentUser && !hasShownToast) {
-    showCenterToast(`ようこそ！${currentUser.userName}さん！`);
-    sessionStorage.setItem('hasShownWelcomeToast', 'true');
-  }
-
+  // ログインしている場合はユーザー名を表示し、UIを更新
   if (currentUser) {
+    showCenterToast(`ようこそ！${currentUser.userName}さん！`);
+
     myUserName.textContent = currentUser.userName;
     postsButtonVisibility(true);
   } else {

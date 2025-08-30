@@ -3,118 +3,31 @@ import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { createConfirmDialog } from '../utils/confirmDialog.js';
 import { showCenterToast } from '../utils/toast.js';
 import { createElementWithClasses } from '../utils/domFactory.js';
-import { showError, resetAllErrors } from '../utils/errorMessage.js';
+import {
+  showError,
+  resetAllErrors,
+  errorMessage,
+} from '../utils/errorMessage.js';
 
-// -------------------- 定数 --------------------
-const USER_ID_MIN = 5;
-const USER_ID_MAX = 15;
-const PASSWORD_MIN = 5;
-const PASSWORD_MAX = 15;
-const ALPHANUMERIC = /^[a-zA-Z0-9]+$/;
+// ------------------------------------------------------- //
+/*      signupBtnクリック関数                                */
+// ------------------------------------------------------- //
 
-// -------------------- ユーティリティ関数 --------------------
-async function fetchUserByField(field, value) {
-  const res = await fetch(
-    `${BASE_URL}/users?${field}=${encodeURIComponent(value)}`
-  );
-  return res.json();
-}
-
-function validateUserName(value, signupForm, elements, userNameData) {
-  if (!value) {
-    showError(
-      signupForm,
-      '.userNameRequired',
-      'ユーザーネームが入力されていません'
-    );
-    elements.signupUserNameDiscription.classList.add('isHidden');
-    return false;
-  }
-  if (userNameData.length > 0) {
-    showError(
-      signupForm,
-      '.duplicateUserName',
-      'このユーザーネームは既に使われています'
-    );
-    return false;
-  }
-  return true;
-}
-
-function validateUserId(value, signupForm, elements, userIdData) {
-  if (!value) {
-    showError(signupForm, '.userIdRequired', 'ユーザーIDが入力されていません');
-    elements.signupUserIdDiscription.classList.add('isHidden');
-    return false;
-  }
-  if (value.length < USER_ID_MIN || value.length > USER_ID_MAX) {
-    showError(
-      signupForm,
-      '.userIdTooShort',
-      `ユーザーIDは${USER_ID_MIN}文字以上${USER_ID_MAX}文字以下で登録してください`
-    );
-    elements.signupUserIdDiscription.classList.add('isHidden');
-    return false;
-  }
-  if (!ALPHANUMERIC.test(value)) {
-    showError(
-      signupForm,
-      '.invalidUserId',
-      'ユーザーIDは半角英数字のみ使用できます'
-    );
-    return false;
-  }
-  if (userIdData.length > 0) {
-    showError(
-      signupForm,
-      '.duplicateUserId',
-      'このユーザーIDは既に使われています'
-    );
-    return false;
-  }
-  return true;
-}
-
-function validatePassword(value, signupForm, elements) {
-  if (!value) {
-    showError(
-      signupForm,
-      '.passwordRequired',
-      'パスワードが入力されていません'
-    );
-    elements.signupPasswordDiscription.classList.add('isHidden');
-    return false;
-  }
-  if (value.length < PASSWORD_MIN || value.length > PASSWORD_MAX) {
-    showError(
-      signupForm,
-      '.passwordTooShort',
-      `パスワードは${PASSWORD_MIN}文字以上${PASSWORD_MAX}文字以下で登録してください`
-    );
-    elements.signupPasswordDiscription.classList.add('isHidden');
-    return false;
-  }
-  if (!ALPHANUMERIC.test(value)) {
-    showError(
-      signupForm,
-      '.invalidPassword',
-      'パスワードは半角英数字のみ使用できます'
-    );
-    return false;
-  }
-  return true;
-}
-
-// -------------------- メイン処理 --------------------
 export function handleSignup(signupBtn) {
   signupBtn.addEventListener('click', () => {
     showSignupForm();
   });
 }
 
+// ------------------------------------------------------- //
+/*      サインアップ関数                                      */
+// ------------------------------------------------------- //
+
 export function showSignupForm(savedValues = {}) {
+  // DOM構築
   const { form: signupForm, overlayElement, elements } = createSignupForm();
 
+  // 保存された値があれば入力欄にセット
   if (savedValues.userName)
     elements.signupUserNameInput.value = savedValues.userName;
   if (savedValues.userId) elements.signupUserIdInput.value = savedValues.userId;
@@ -122,44 +35,103 @@ export function showSignupForm(savedValues = {}) {
     elements.signupPasswordInput.value = savedValues.password;
 
   signupForm.addEventListener('submit', async (e) => {
+    // デフォルトのフォーム送信を防止
     e.preventDefault();
 
+    // 以前のエラーメッセージをリセット
     resetAllErrors(signupForm);
+
+    // 説明文を再表示
     elements.signupUserNameDiscription.classList.add('isHidden');
     elements.signupUserIdDiscription.classList.add('isHidden');
     elements.signupPasswordDiscription.classList.add('isHidden');
 
-    const signupUserNameValue = elements.signupUserNameInput.value;
-    const signupUserIdValue = elements.signupUserIdInput.value;
-    const signupPasswordValue = elements.signupPasswordInput.value;
+    // 入力値の取得
+    const signupUserNameValue = elements.signupUserNameInput.value.trim();
+    const signupUserIdValue = elements.signupUserIdInput.value.trim();
+    const signupPasswordValue = elements.signupPasswordInput.value.trim();
+    const alphanumeric = /^[a-zA-Z0-9]+$/;
 
+    // ユーザーネーム、ユーザーIDの重複チェック
+    const [userNameRes, userIdRes] = await Promise.all([
+      fetch(
+        `${BASE_URL}/users?userName=${encodeURIComponent(signupUserNameValue)}`
+      ),
+      fetch(
+        `${BASE_URL}/users?userId=${encodeURIComponent(signupUserIdValue)}`
+      ),
+    ]);
     const [userNameData, userIdData] = await Promise.all([
-      fetchUserByField('userName', signupUserNameValue),
-      fetchUserByField('userId', signupUserIdValue),
+      userNameRes.json(),
+      userIdRes.json(),
     ]);
 
-    const isUserNameValid = validateUserName(
-      signupUserNameValue,
-      signupForm,
-      elements,
-      userNameData
-    );
-    const isUserIdValid = validateUserId(
-      signupUserIdValue,
-      signupForm,
-      elements,
-      userIdData
-    );
-    const isPasswordValid = validatePassword(
-      signupPasswordValue,
-      signupForm,
-      elements
-    );
+    // エラーフラグ
+    let hasError = false;
 
-    if (!isUserNameValid || !isUserIdValid || !isPasswordValid) return;
+    // ユーザーネームのバリデーション
+    if (signupUserNameValue.length === 0) {
+      showError(signupForm, '.userNameRequired', errorMessage.userNameRequired);
+      elements.signupUserNameDiscription.classList.add('isHidden');
+      hasError = true;
+    } else if (userNameData.length > 0) {
+      showError(
+        signupForm,
+        '.duplicateUserName',
+        errorMessage.duplicateUserName
+      );
+      hasError = true;
+    }
 
+    // ユーザーIDのバリデーション
+    if (signupUserIdValue.length === 0) {
+      showError(signupForm, '.userIdRequired', errorMessage.userIdRequired);
+      elements.signupUserIdDiscription.classList.add('isHidden');
+      hasError = true;
+    } else if (!alphanumeric.test(signupUserIdValue)) {
+      showError(signupForm, '.invalidUserId', errorMessage.invalidUserId);
+      hasError = true;
+    } else if (signupUserIdValue.length < 5 || signupUserIdValue.length >= 15) {
+      showError(
+        signupForm,
+        '.userIdLengthInvalid',
+        errorMessage.userIdLengthInvalid
+      );
+      elements.signupUserIdDiscription.classList.add('isHidden');
+      hasError = true;
+    } else if (userIdData.length > 0) {
+      showError(signupForm, '.duplicateUserId', errorMessage.duplicateUserId);
+      hasError = true;
+    }
+
+    // パスワードのバリデーション
+    if (signupPasswordValue.length === 0) {
+      showError(signupForm, '.passwordRequired', errorMessage.passwordRequired);
+      elements.signupPasswordDiscription.classList.add('isHidden');
+      hasError = true;
+    } else if (!alphanumeric.test(signupPasswordValue)) {
+      showError(signupForm, '.invalidPassword', errorMessage.invalidPassword);
+      hasError = true;
+    } else if (
+      signupPasswordValue.length < 5 ||
+      signupPasswordValue.length >= 15
+    ) {
+      showError(
+        signupForm,
+        '.passwordLengthInvalid',
+        errorMessage.passwordLengthInvalid
+      );
+      elements.signupPasswordDiscription.classList.add('isHidden');
+      hasError = true;
+    }
+
+    // エラーがあれば処理中断
+    if (hasError) return;
+
+    // オーバーレイを閉じる
     overlayElement.remove();
 
+    // 確認ダイアログの表示
     createConfirmDialog({
       mainMessage: '登録内容を確定しますか？',
       affirmMessage: '登録',
@@ -180,6 +152,7 @@ export function showSignupForm(savedValues = {}) {
         showCenterToast('登録が完了しました！');
       },
       clickNoBtn: () => {
+        // 前の画面の入力状態を保持した状態で再表示
         showSignupForm({
           userName: signupUserNameValue,
           userId: signupUserIdValue,
@@ -189,12 +162,16 @@ export function showSignupForm(savedValues = {}) {
     });
   });
 
+  // オーバーレイをクリックした時の処理
   clickedOverlay(signupForm, overlayElement);
 }
 
-// ------------------------------------------------------ DOM 構築 ------------------------------------------------------//
+// ------------------------------------------------------- //
+/*      DOM構築関数                                         */
+// ------------------------------------------------------- //
 
 function createSignupForm() {
+  // フォーム全体
   const signupForm = createElementWithClasses('form', 'signupForm');
 
   const signupFormSectionTitle = createElementWithClasses(
@@ -203,6 +180,7 @@ function createSignupForm() {
   );
   signupFormSectionTitle.textContent = '新規登録';
 
+  // ユーザーネーム
   const signupUserNameArea = createElementWithClasses(
     'div',
     'signupUserNameArea'
@@ -214,11 +192,6 @@ function createSignupForm() {
   );
   signupUserNameAreaTitle.textContent = 'ユーザーネーム';
 
-  const signupUserNameOuter = createElementWithClasses(
-    'div',
-    'signupUserNameOuter'
-  );
-
   const signupUserNameInput = createElementWithClasses(
     'input',
     'signupUserNameInput'
@@ -226,35 +199,14 @@ function createSignupForm() {
   signupUserNameInput.type = 'text';
   signupUserNameInput.maxlength = '20';
 
-  const signupUserNameInner = createElementWithClasses(
-    'div',
-    'signupUserNameInner'
-  );
-
-  const userNameCheckIcon = createElementWithClasses(
-    'i',
-    'userNameCheckIcon',
-    'isHidden',
-    'fa-solid',
-    'fa-check'
-  );
-
-  const userNameCrossIcon = createElementWithClasses(
-    'i',
-    'userNameCrossIcon',
-    'isHidden',
-    'fa-solid',
-    'fa-xmark'
+  const signupUserNameDiscription = createElementWithClasses(
+    'p',
+    'signupUserNameDiscription'
   );
 
   const userNameErrorContainer = createElementWithClasses(
     'div',
     'userNameErrorContainer'
-  );
-
-  const signupUserNameDiscription = createElementWithClasses(
-    'p',
-    'signupUserNameDiscription'
   );
 
   const userNameRequired = createElementWithClasses(
@@ -263,7 +215,6 @@ function createSignupForm() {
     'errorMessage',
     'isHidden'
   );
-  userNameRequired.textContent = 'ユーザーネームが入力されていません';
 
   const duplicateUserName = createElementWithClasses(
     'p',
@@ -271,10 +222,8 @@ function createSignupForm() {
     'errorMessage',
     'isHidden'
   );
-  duplicateUserName.textContent = 'このユーザーネームは既に使われています';
 
-  /*---------------------------------------------------------------*/
-
+  // ユーザーID
   const signupUserIdArea = createElementWithClasses('div', 'signupUserIdArea');
 
   const signupUserIdAreaTitle = createElementWithClasses(
@@ -283,43 +232,12 @@ function createSignupForm() {
   );
   signupUserIdAreaTitle.textContent = 'ユーザーID';
 
-  const signupUserIdOuter = createElementWithClasses(
-    'div',
-    'signupUserIdOuter'
-  );
-
   const signupUserIdInput = createElementWithClasses(
     'input',
     'signupUserIdInput'
   );
   signupUserIdInput.type = 'text';
   signupUserIdInput.maxlength = '20';
-
-  const signupUserIdInner = createElementWithClasses(
-    'div',
-    'signupUserIdInner'
-  );
-
-  const userIdCheckIcon = createElementWithClasses(
-    'i',
-    'userIdCheckIcon',
-    'isHidden',
-    'fa-solid',
-    'fa-check'
-  );
-
-  const userIdCrossIcon = createElementWithClasses(
-    'i',
-    'userIdCrossIcon',
-    'isHidden',
-    'fa-solid',
-    'fa-xmark'
-  );
-
-  const userIdErrorContainer = createElementWithClasses(
-    'div',
-    'userIdErrorContainer'
-  );
 
   const signupUserIdDiscription = createElementWithClasses(
     'p',
@@ -328,22 +246,17 @@ function createSignupForm() {
   signupUserIdDiscription.textContent =
     '半角英数字5文字以上15文字以下で登録してください';
 
+  const userIdErrorContainer = createElementWithClasses(
+    'div',
+    'userIdErrorContainer'
+  );
+
   const userIdRequired = createElementWithClasses(
     'p',
     'userIdRequired',
     'errorMessage',
     'isHidden'
   );
-  userIdRequired.textContent = 'ユーザーIDが入力されていません';
-
-  const userIdTooShort = createElementWithClasses(
-    'p',
-    'userIdTooShort',
-    'errorMessage',
-    'isHidden'
-  );
-  userIdTooShort.textContent =
-    'ユーザーIDは5文字以上15文字以下で登録してください';
 
   const duplicateUserId = createElementWithClasses(
     'p',
@@ -351,10 +264,22 @@ function createSignupForm() {
     'errorMessage',
     'isHidden'
   );
-  duplicateUserId.textContent = 'このユーザーIDは既に使われています';
 
-  /*---------------------------------------------------------------*/
+  const userIdLengthInvalid = createElementWithClasses(
+    'p',
+    'userIdLengthInvalid',
+    'errorMessage',
+    'isHidden'
+  );
 
+  const invalidUserId = createElementWithClasses(
+    'p',
+    'invalidUserId',
+    'errorMessage',
+    'isHidden'
+  );
+
+  // パスワード
   const signupPasswordArea = createElementWithClasses(
     'div',
     'signupPasswordArea'
@@ -366,43 +291,12 @@ function createSignupForm() {
   );
   signupPasswordAreaTitle.textContent = 'パスワード';
 
-  const signupPasswordOuter = createElementWithClasses(
-    'div',
-    'signupPasswordOuter'
-  );
-
   const signupPasswordInput = createElementWithClasses(
     'input',
     'signupPasswordInput'
   );
   signupPasswordInput.type = 'password';
   signupPasswordInput.maxlength = '20';
-
-  const signupPasswordInner = createElementWithClasses(
-    'div',
-    'signupPasswordInner'
-  );
-
-  const passwordCheckIcon = createElementWithClasses(
-    'i',
-    'passwordCheckIcon',
-    'isHidden',
-    'fa-solid',
-    'fa-check'
-  );
-
-  const passwordCrossIcon = createElementWithClasses(
-    'i',
-    'passwordCrossIcon',
-    'isHidden',
-    'fa-solid',
-    'fa-xmark'
-  );
-
-  const passwordErrorContainer = createElementWithClasses(
-    'div',
-    'passwordErrorContainer'
-  );
 
   const signupPasswordDiscription = createElementWithClasses(
     'p',
@@ -411,28 +305,38 @@ function createSignupForm() {
   signupPasswordDiscription.textContent =
     '半角英数字5文字以上15文字以下で登録してください';
 
+  const passwordErrorContainer = createElementWithClasses(
+    'div',
+    'passwordErrorContainer'
+  );
+
   const passwordRequired = createElementWithClasses(
     'p',
     'passwordRequired',
     'errorMessage',
     'isHidden'
   );
-  passwordRequired.textContent = 'パスワードが入力されていません';
 
-  const passwordTooShort = createElementWithClasses(
+  const passwordLengthInvalid = createElementWithClasses(
     'p',
-    'passwordTooShort',
+    'passwordLengthInvalid',
     'errorMessage',
     'isHidden'
   );
-  passwordTooShort.textContent =
-    'パスワードは5文字以上15文字以下で登録してください';
 
-  /*---------------------------------------------------------------*/
+  const invalidPassword = createElementWithClasses(
+    'p',
+    'invalidPassword',
+    'errorMessage',
+    'isHidden'
+  );
+
+  // 登録ボタン
   const signupFormInBtn = createElementWithClasses('button', 'signupFormInBtn');
   signupFormInBtn.type = 'submit';
   signupFormInBtn.textContent = '登録';
 
+  // append処理
   signupForm.append(
     signupFormSectionTitle,
     signupUserNameArea,
@@ -443,83 +347,58 @@ function createSignupForm() {
 
   signupUserNameArea.append(
     signupUserNameAreaTitle,
-    signupUserNameOuter,
+    signupUserNameInput,
     signupUserNameDiscription,
     userNameErrorContainer
   );
-  signupUserNameOuter.append(signupUserNameInput, signupUserNameInner);
-  signupUserNameInner.append(userNameCheckIcon, userNameCrossIcon);
   userNameErrorContainer.append(userNameRequired, duplicateUserName);
 
   signupUserIdArea.append(
     signupUserIdAreaTitle,
-    signupUserIdOuter,
+    signupUserIdInput,
     signupUserIdDiscription,
     userIdErrorContainer
   );
-  signupUserIdOuter.append(signupUserIdInput, signupUserIdInner);
-  signupUserIdInner.append(userIdCheckIcon, userIdCrossIcon);
-  userIdErrorContainer.append(userIdRequired, userIdTooShort, duplicateUserId);
+  userIdErrorContainer.append(
+    userIdRequired,
+    userIdLengthInvalid,
+    duplicateUserId,
+    invalidUserId
+  );
 
   signupPasswordArea.append(
     signupPasswordAreaTitle,
-    signupPasswordOuter,
+    signupPasswordInput,
     signupPasswordDiscription,
     passwordErrorContainer
   );
-  signupPasswordOuter.append(signupPasswordInput, signupPasswordInner);
-  signupPasswordInner.append(passwordCheckIcon, passwordCrossIcon);
-  passwordErrorContainer.append(passwordRequired, passwordTooShort);
+  passwordErrorContainer.append(
+    passwordRequired,
+    passwordLengthInvalid,
+    invalidPassword
+  );
 
+  // オーバーレイ作成
   const overlayElement = createOverlayWithContent(signupForm);
 
+  // 各要素をオブジェクトにまとめて返す
   const elements = {
-    signupUserNameInput: signupForm.querySelector('.signupUserNameInput'),
-    signupUserIdInput: signupForm.querySelector('.signupUserIdInput'),
-    signupPasswordInput: signupForm.querySelector('.signupPasswordInput'),
-    userNameCheckIcon: signupForm.querySelector('.userNameCheckIcon'),
-    userNameCrossIcon: signupForm.querySelector('.userNameCrossIcon'),
-    userIdCheckIcon: signupForm.querySelector('.userIdCheckIcon'),
-    userIdCrossIcon: signupForm.querySelector('.userIdCrossIcon'),
-    passwordCheckIcon: signupForm.querySelector('.passwordCheckIcon'),
-    passwordCrossIcon: signupForm.querySelector('.passwordCrossIcon'),
-    signupUserNameDiscription: signupForm.querySelector(
-      '.signupUserNameDiscription'
-    ),
-    signupUserIdDiscription: signupForm.querySelector(
-      '.signupUserIdDiscription'
-    ),
-    signupPasswordDiscription: signupForm.querySelector(
-      '.signupPasswordDiscription'
-    ),
-    errorMessage: signupForm.querySelector('.errorMessage'),
+    signupUserNameInput,
+    signupUserIdInput,
+    signupPasswordInput,
+    signupUserNameDiscription,
+    signupUserIdDiscription,
+    signupPasswordDiscription,
+    userNameRequired,
+    duplicateUserName,
+    userIdRequired,
+    userIdLengthInvalid,
+    invalidUserId,
+    duplicateUserId,
+    passwordRequired,
+    passwordLengthInvalid,
+    invalidPassword,
   };
 
-  return {
-    form: signupForm,
-    overlayElement,
-    elements: {
-      signupUserNameInput,
-      userNameCheckIcon,
-      userNameCrossIcon,
-      signupUserNameDiscription,
-      userNameRequired,
-      duplicateUserName,
-
-      signupUserIdInput,
-      userIdCheckIcon,
-      userIdCrossIcon,
-      signupUserIdDiscription,
-      userIdRequired,
-      userIdTooShort,
-      duplicateUserId,
-
-      signupPasswordInput,
-      passwordCheckIcon,
-      passwordCrossIcon,
-      signupPasswordDiscription,
-      passwordRequired,
-      passwordTooShort,
-    },
-  };
+  return { form: signupForm, overlayElement, elements };
 }

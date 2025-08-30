@@ -1,7 +1,10 @@
+// インポート
 import { createOverlayWithContent, clickedOverlay } from './overlay.js';
-import { charLimit } from './charLimit.js';
-import { enterClick } from './keyEvent.js';
-import { errorMessage } from './errorMessage.js';
+import { showError, errorMessage } from './errorMessage.js';
+
+// ------------------------------------------------------- //
+/*      要素作成関数                                         */
+// ------------------------------------------------------- //
 
 export function createElementWithClasses(tag, ...classes) {
   const el = document.createElement(tag);
@@ -9,11 +12,40 @@ export function createElementWithClasses(tag, ...classes) {
   return el;
 }
 
+// ------------------------------------------------------- //
+/*      新規投稿・投稿編集フォーム作成関数                       */
+// ------------------------------------------------------- //
+
 export function createPostForm({
   sectionTitleText = '新規投稿',
   submitText = '送信',
 } = {}) {
-  const postForm = createElementWithClasses('form', 'postForm');
+  // DOM構築
+  const { postForm, overlayElement, elements } = buildPostForm({
+    sectionTitleText,
+    submitText,
+  });
+
+  // オーバーレイクリックで閉じる処理
+  clickedOverlay(postForm, overlayElement);
+
+  // 文字数制限の設定
+  charLimit(elements);
+
+  return {
+    form: postForm,
+    overlayElement,
+    elements,
+  };
+}
+
+// ------------------------------------------------------- //
+/*      DOM構築関数                                         */
+// ------------------------------------------------------- //
+
+function buildPostForm({ sectionTitleText, submitText }) {
+  // フォーム全体
+  const postForm = createElementWithClasses('div', 'postForm');
 
   const sectionTitle = createElementWithClasses('h2', 'sectionTitle');
   sectionTitle.textContent = sectionTitleText;
@@ -29,6 +61,7 @@ export function createPostForm({
   const newTitle = createElementWithClasses('input', 'newTitle');
   newTitle.type = 'text';
 
+  // エラー表示
   const titleErrorContainer = createElementWithClasses(
     'div',
     'titleErrorContainer'
@@ -81,6 +114,7 @@ export function createPostForm({
   mainTextRequiredError.textContent = errorMessage.mainTextRequired;
   const mainTextChar = createElementWithClasses('p', 'mainTextChar');
 
+  // append処理
   mainTextErrorContainer.append(
     mainTextCharError,
     mainTextRequiredError,
@@ -100,43 +134,100 @@ export function createPostForm({
     mainTextErrorContainer
   );
 
+  // オーバーレイ作成
   const overlayElement = createOverlayWithContent(postForm);
-  clickedOverlay(postForm, overlayElement);
 
-  charLimit(
+  const elements = {
     newTitle,
     newMainText,
+    titleErrorContainer,
+    mainTextErrorContainer,
+    titleRequiredError,
+    mainTextRequiredError,
     titleCharError,
     mainTextCharError,
     titleChar,
     mainTextChar,
-    postFormInBtn
-  );
+    postFormInBtn,
+  };
 
-  newTitle.addEventListener('input', () => {
-    if (newTitle.value.trim()) {
+  return { postForm, overlayElement, elements };
+}
+
+// ------------------------------------------------------- //
+/*      文字数制限関数                                       */
+// ------------------------------------------------------- //
+
+function charLimit() {
+  // 引数で受け取った要素を分割代入で取得
+  const {
+    newTitle,
+    newMainText,
+    titleErrorContainer,
+    mainTextErrorContainer,
+    titleRequiredError,
+    mainTextRequiredError,
+    titleCharError,
+    mainTextCharError,
+    titleChar,
+    mainTextChar,
+    postFormInBtn,
+  } = elements;
+
+  // 文字数制限の設定
+  const maxTitleLength = 30;
+  const maxMainTextLength = 150;
+
+  // ------------------------------------------------------- //
+  /*      バリデーション関数                                    */
+  // ------------------------------------------------------- //
+
+  function validate() {
+    // 現在の文字数を取得
+    const titleLength = newTitle.value.length;
+    const mainTextLength = newMainText.value.length;
+
+    // 文字数表示の更新
+    titleChar.textContent = `${titleLength} / ${maxTitleLength}`;
+    mainTextChar.textContent = `${mainTextLength} / ${maxMainTextLength}`;
+
+    // 文字数オーバーの判定
+    const isTitleTooLong = titleLength > maxTitleLength;
+    const isMainTextTooLong = mainTextLength > maxMainTextLength;
+
+    // エラーメッセージの表示・非表示
+    if (isTitleTooLong) {
+      showError(
+        titleErrorContainer,
+        '.titleCharError',
+        errorMessage.titleTooLong
+      );
+    } else {
+      titleCharError.classList.add('isHidden');
+    }
+    if (isMainTextTooLong) {
+      showError(
+        mainTextErrorContainer,
+        '.mainTextCharError',
+        errorMessage.mainTextTooLong
+      );
+    } else {
+      mainTextCharError.classList.add('isHidden');
+    }
+
+    // 入力があったらエラーメッセージを非表示にする処理
+    if (newTitle.value) {
       titleRequiredError.classList.add('isHidden');
     }
-  });
-  newMainText.addEventListener('input', () => {
-    if (newMainText.value.trim()) {
+    if (newMainText.value) {
       mainTextRequiredError.classList.add('isHidden');
     }
-  });
 
-  enterClick(postForm, postFormInBtn);
+    postFormInBtn.disabled = isTitleTooLong || isMainTextTooLong;
+  }
 
-  return {
-    form: postForm,
-    overlayElement,
-    elements: {
-      newTitle,
-      newMainText,
-      postFormInBtn,
-      titleCharError,
-      mainTextCharError,
-      titleRequiredError,
-      mainTextRequiredError,
-    },
-  };
+  newTitle.addEventListener('input', validate);
+  newMainText.addEventListener('input', validate);
+
+  validate();
 }

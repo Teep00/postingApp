@@ -1,3 +1,7 @@
+// ------------------------------------------------------- //
+/*      DOM要素を取得してエクスポート                          */
+// ------------------------------------------------------- //
+
 export const myUserName = document.querySelector('.myUserName');
 export const posts = document.querySelector('#posts');
 export const postTemplate = document.querySelector('.post');
@@ -10,3 +14,4 @@ export const newPostCreateBtn = document.querySelector('.newPostCreateBtn');
 export const signupBtn = document.querySelector('.signupBtn');
 export const loginBtn = document.querySelector('.loginBtn');
 export const logoutBtn = document.querySelector('.logoutBtn');
+export const scrollToTopBtn = document.querySelector('.scrollToTopBtn');

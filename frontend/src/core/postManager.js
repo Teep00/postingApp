@@ -1,5 +1,5 @@
 // インポート
-import { BASE_URL } from '../baseURL.js';
+import { BASE_URL } from './baseURL.js';
 import { currentDate } from '../../src/utils/time.js';
 import { handleDelete } from '../../src/modules/delete.js';
 import { handleEdit } from '../../src/modules/edit.js';
@@ -9,6 +9,10 @@ import { posts } from '../../src/utils/domElementList.js';
 import { createElementWithClasses } from '../../src/utils/domFactory.js';
 import { postsButtonVisibility } from '../../src/utils/postView.js';
 import { likeButtonDisabled } from '../../src/utils/likeButtonDisabled.js';
+
+// ------------------------------------------------------- //
+/*      投稿の初期表示関数                                    */
+// ------------------------------------------------------- //
 
 export function fetchInitialPosts() {
   fetch(`${BASE_URL}/posts`)
@@ -24,24 +28,27 @@ export function fetchInitialPosts() {
       postsButtonVisibility(!!currentUser);
       likeButtonDisabled();
     })
+
     .catch((err) => console.error(err.message));
 }
 
-// 投稿の操作
+// ------------------------------------------------------- //
+/*      投稿操作関数                                         */
+// ------------------------------------------------------- //
+
 export function createPostElement({
   id,
   title,
   body,
   userName,
-  userId,
   createdAt,
   likes,
-  likedUsers,
+  edited,
 }) {
+  // ログイン中のユーザー情報を取得
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-  /*---------------------- DOM構築 ----------------------*/
-
+  // DOM構築
   const post = createElementWithClasses('div', 'post', 'box');
 
   const userInfo = createElementWithClasses('div', 'userInfo');
@@ -66,6 +73,7 @@ export function createPostElement({
     'fa-heart'
   );
 
+  // いいね済みの場合はハートを赤くする
   if (currentUser && currentUser.likedPosts.includes(String(id))) {
     heartIcon.classList.add('liked');
   } else {
@@ -92,6 +100,7 @@ export function createPostElement({
 
   const timeArea = createElementWithClasses('div', 'timeArea');
 
+  // append処理
   post.append(userInfo, titleEl, mainTextEl, buttonContainer, timeArea);
   userInfo.append(userNameEl);
   buttonContainer.append(likeEditArea, deleteBtn);
@@ -101,14 +110,21 @@ export function createPostElement({
   const name = post.querySelector('.userName');
   name.textContent = userName;
 
-  /*----------------------------------------------------*/
-
+  // 投稿時刻
   currentDate(createdAt, post);
 
+  // 投稿が編集されている場合は編集済みと表示
+  if (edited) {
+    const edited = post.querySelector('.edited');
+    edited.classList.remove('isHidden');
+  }
+
+  // dataset設定
   post.dataset.likes = likes || 0;
   post.dataset.id = id;
   post.dataset.name = name.textContent;
 
+  // 文字数制限
   (function textLimit(title, body) {
     const titleEl = post.querySelector('.title');
     const mainTextEl = post.querySelector('.mainText');
@@ -119,12 +135,15 @@ export function createPostElement({
       body.length > 150 ? body.slice(0, 150) + '...' : body;
   })(title, body);
 
-  deleteBtn.addEventListener('click', () => handleDelete(post, id));
-  editBtn.addEventListener('click', () => handleEdit(post, { id }));
-  likeBtn.addEventListener('click', (event) => handleLike(post, event));
+  // 投稿削除・投稿編集・いいね機能
+  deleteBtn.addEventListener('click', () => handleDelete(post));
+  editBtn.addEventListener('click', () => handleEdit(post));
+  likeBtn.addEventListener('click', () => handleLike(post));
 
+  // 新しい投稿を先頭に追加
   posts.prepend(post);
 
+  // 投稿のフェードイン
   fadeInObserver.observe(post);
 
   return post;
