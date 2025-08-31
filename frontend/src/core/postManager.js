@@ -1,14 +1,14 @@
 // インポート
-import { BASE_URL } from './baseURL.js';
-import { currentDate } from '../../src/utils/time.js';
-import { handleDelete } from '../../src/modules/delete.js';
-import { handleEdit } from '../../src/modules/edit.js';
-import { handleLike } from '../../src/modules/like.js';
-import { fadeInObserver } from '../../src/utils/fadeInObserver.js';
-import { posts } from '../../src/utils/domElementList.js';
-import { createElementWithClasses } from '../../src/utils/domFactory.js';
-import { postsButtonVisibility } from '../../src/utils/postView.js';
-import { likeButtonDisabled } from '../../src/utils/likeButtonDisabled.js';
+import { BASE_URL } from '../../../baseURL.js';
+import { currentDate } from '../utils/time.js';
+import { handleDelete } from '../modules/delete.js';
+import { handleEdit } from '../modules/edit.js';
+import { handleLike } from '../modules/like.js';
+import { fadeInObserver } from '../utils/fadeInObserver.js';
+import { posts } from '../utils/domElementList.js';
+import { createElementWithClasses } from '../utils/domFactory.js';
+import { postsButtonVisibility } from '../utils/postView.js';
+import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
 
 // ------------------------------------------------------- //
 /*      投稿の初期表示関数                                    */

@@ -1,5 +1,5 @@
 // インポート
-import { BASE_URL } from '../baseURL.js';
+import { BASE_URL } from '../../baseURL.js';
 import { createPostElement } from '../core/postManager.js';
 import { createPostForm } from '../utils/domFactory.js';
 import {
@@ -56,8 +56,6 @@ export function newPostCreate(newPostCreateBtn) {
 
       // ログイン中のユーザー情報を取得
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-      sessionStorage.setItem('newPostInProgress', 'true');
 
       // 投稿を作成してサーバーのデータを更新
       fetch(`${BASE_URL}/posts`, {

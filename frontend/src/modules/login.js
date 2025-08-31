@@ -1,5 +1,5 @@
 // インポート
-import { BASE_URL } from '../baseURL.js';
+import { BASE_URL } from '../../baseURL.js';
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { showCenterToast } from '../utils/toast.js';
 import { myUserName } from '../utils/domElementList.js';
@@ -98,7 +98,6 @@ export function handleLogin(loginBtn) {
 
       // ログイン成功処理
       localStorage.setItem('currentUser', JSON.stringify(foundUser));
-      sessionStorage.setItem('loggedIn', 'true');
       likeButtonDisabled();
 
       document.querySelectorAll('.post').forEach((post) => {

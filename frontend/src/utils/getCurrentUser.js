@@ -11,14 +11,9 @@ export function getCurrentUser() {
   // ローカルストレージから現在のユーザー情報を取得
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-  // 直前にログインした場合はウェルカムメッセージを表示しない
-  const loggedIn = sessionStorage.getItem('loggedIn');
-  if (loggedIn) return;
-
   // ログインしている場合はユーザー名を表示し、UIを更新
   if (currentUser) {
     showCenterToast(`ようこそ！${currentUser.userName}さん！`);
-
     myUserName.textContent = currentUser.userName;
     postsButtonVisibility(true);
   } else {

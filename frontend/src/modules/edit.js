@@ -1,5 +1,5 @@
 // インポート
-import { BASE_URL } from '../core/baseURL.js';
+import { BASE_URL } from '../../baseURL.js';
 import { createPostForm } from '../utils/domFactory.js';
 import { resetAllErrors } from '../utils/errorMessage.js';
 

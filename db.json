@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "userName": "Murakami",
+      "userId": "aaaaa",
+      "password": "aaaaa",
+      "likedPosts": []
+    },
+    {
+      "userName": "Tom",
+      "userId": "bbbbb",
+      "password": "bbbbb",
+      "likedPosts": []
+    }
+  ],
+  "posts": [
+    {
+      "id": "7hhz11j5",
+      "title": "いい天気だなぁ",
+      "body": "おはよう！\n空は雲一つなくてとても晴れやかな気分！",
+      "userName": "Murakami",
+      "userId": "aaaaa",
+      "createdAt": "2025-08-31T16:20:44.336Z",
+      "likes": 0,
+      "likedUsers": [],
+      "edited": true
+    },
+    {
+      "id": "t313a64c",
+      "title": "LIVE当日！",
+      "body": "今日は待ちに待ったLIVE当日！\n超楽しみ！！",
+      "userName": "Tom",
+      "userId": "bbbbb",
+      "createdAt": "2025-08-31T16:23:30.634Z",
+      "likes": 0,
+      "likedUsers": [],
+      "edited": false
+    }
+  ]
+}

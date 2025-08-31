@@ -1,5 +1,5 @@
 // インポート
-import { BASE_URL } from '../baseURL.js';
+import { BASE_URL } from '../../baseURL.js';
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { posts } from '../utils/domElementList.js';
 import { createElementWithClasses } from '../utils/domFactory.js';

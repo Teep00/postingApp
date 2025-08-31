@@ -11,7 +11,6 @@ import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
 export function handleLogout(logoutBtn) {
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem('currentUser');
-    sessionStorage.removeItem('loggedIn');
     likeButtonDisabled();
     myUserName.textContent = '';
     showCenterToast('ログアウトしました');

@@ -1,4 +1,4 @@
-import { BASE_URL } from '../baseURL.js';
+import { BASE_URL } from '../../baseURL.js';
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { createConfirmDialog } from '../utils/confirmDialog.js';
 import { showCenterToast } from '../utils/toast.js';
@@ -8,6 +8,7 @@ import {
   resetAllErrors,
   errorMessage,
 } from '../utils/errorMessage.js';
+import { loginBtn } from '../utils/domElementList.js';
 
 // ------------------------------------------------------- //
 /*      signupBtnクリック関数                                */
@@ -150,6 +151,8 @@ export function showSignupForm(savedValues = {}) {
         });
 
         showCenterToast('登録が完了しました！');
+
+        loginBtn.click();
       },
       clickNoBtn: () => {
         // 前の画面の入力状態を保持した状態で再表示

@@ -1,5 +1,5 @@
 // インポート
-import { BASE_URL } from '../core/baseURL.js';
+import { BASE_URL } from '../../baseURL.js';
 import { createConfirmDialog } from '../utils/confirmDialog.js';
 
 // ------------------------------------------------------- //

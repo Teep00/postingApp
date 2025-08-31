@@ -1,7 +1,7 @@
 body {
   width: 500px;
   margin: 0 auto;
-  background-color: rgb(20, 20, 20);
+  background-color: rgb(16, 16, 16);
 }
 
 body,
@@ -292,7 +292,7 @@ button {
   width: 350px;
   margin: 250px 0;
   padding: 70px 110px;
-  background-color: rgb(27, 27, 27);
+  background-color: rgb(20, 20, 20);
   box-shadow: 1px 0 11px 0 rgb(165, 165, 165);
   opacity: 0;
   transform: translateY(30px);

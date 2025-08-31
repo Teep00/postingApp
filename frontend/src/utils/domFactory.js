@@ -158,7 +158,7 @@ function buildPostForm({ sectionTitleText, submitText }) {
 /*      文字数制限関数                                       */
 // ------------------------------------------------------- //
 
-function charLimit() {
+function charLimit(elements) {
   // 引数で受け取った要素を分割代入で取得
   const {
     newTitle,
