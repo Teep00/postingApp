@@ -90,6 +90,16 @@ export function createPostElement({
   editBtn.type = 'button';
   editBtn.textContent = '編集';
 
+  const replyBtn = createElementWithClasses('button', 'replyBtn');
+  replyBtn.type = 'button';
+
+  const replyIcon = createElementWithClasses(
+    'i',
+    'reply',
+    'fa-solid',
+    'fa-reply'
+  );
+
   const deleteBtn = createElementWithClasses(
     'i',
     'deleteButton',

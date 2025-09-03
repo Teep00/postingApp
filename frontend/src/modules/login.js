@@ -11,6 +11,7 @@ import {
 } from '../utils/errorMessage.js';
 import { postsButtonVisibility } from '../utils/postView.js';
 import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
+import { togglePasswordVisibility } from '../utils/togglePasswordVisibility.js';
 
 // ------------------------------------------------------- //
 /*      ログイン関数                                         */
@@ -21,7 +22,18 @@ export function handleLogin(loginBtn) {
     // DOM構築
     const { form: loginForm, overlayElement, elements } = createLoginForm();
 
-    loginForm.addEventListener('submit', async (e) => {
+    elements.loginPasswordInputToggleBtn.addEventListener('click', (e) => {
+      // デフォルトのフォーム送信を防止
+      e.preventDefault();
+
+      // パスワードの表示・非表示の切り替え処理
+      togglePasswordVisibility(
+        elements.loginPasswordInput,
+        elements.loginPasswordInputToggleBtn
+      );
+    });
+
+    elements.loginFormInBtn.addEventListener('click', async (e) => {
       // デフォルトのフォーム送信を防止
       e.preventDefault();
 
@@ -171,11 +183,17 @@ function createLoginForm() {
     'div',
     'loginPasswordArea'
   );
+
   const loginPasswordAreaTitle = createElementWithClasses(
     'h3',
     'loginPasswordAreaTitle'
   );
   loginPasswordAreaTitle.textContent = 'パスワード';
+
+  const loginPasswordWrapper = createElementWithClasses(
+    'div',
+    'loginPasswordWrapper'
+  );
 
   const loginPasswordInput = createElementWithClasses(
     'input',
@@ -183,6 +201,13 @@ function createLoginForm() {
   );
   loginPasswordInput.type = 'password';
   loginPasswordInput.maxlength = '15';
+
+  const loginPasswordInputToggleBtn = createElementWithClasses(
+    'i',
+    'loginPasswordInputToggleBtn',
+    'fa-solid',
+    'fa-eye'
+  );
 
   const loginPasswordErrorContainer = createElementWithClasses(
     'div',
@@ -229,9 +254,11 @@ function createLoginForm() {
   );
   loginUserIdErrorContainer.append(userIdRequired);
 
+  loginPasswordWrapper.append(loginPasswordInput, loginPasswordInputToggleBtn);
+
   loginPasswordArea.append(
     loginPasswordAreaTitle,
-    loginPasswordInput,
+    loginPasswordWrapper,
     loginPasswordErrorContainer
   );
 
@@ -248,10 +275,12 @@ function createLoginForm() {
   const elements = {
     loginUserIdInput,
     loginPasswordInput,
+    loginPasswordInputToggleBtn,
     userIdRequired,
     passwordRequired,
     invalidCredentials,
     loginRequestError,
+    loginFormInBtn,
   };
 
   return { form: loginForm, overlayElement, elements };

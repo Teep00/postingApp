@@ -1,3 +1,4 @@
+// インポート
 import { BASE_URL } from '../../baseURL.js';
 import { createOverlayWithContent, clickedOverlay } from '../utils/overlay.js';
 import { createConfirmDialog } from '../utils/confirmDialog.js';
@@ -9,6 +10,7 @@ import {
   errorMessage,
 } from '../utils/errorMessage.js';
 import { loginBtn } from '../utils/domElementList.js';
+import { togglePasswordVisibility } from '../utils/togglePasswordVisibility.js';
 
 // ------------------------------------------------------- //
 /*      signupBtnクリック関数                                */
@@ -27,6 +29,17 @@ export function handleSignup(signupBtn) {
 export function showSignupForm(savedValues = {}) {
   // DOM構築
   const { form: signupForm, overlayElement, elements } = createSignupForm();
+
+  elements.signupPasswordInputToggleBtn.addEventListener('click', (e) => {
+    // デフォルトのフォーム送信を防止
+    e.preventDefault();
+
+    // パスワードの表示・非表示の切り替え処理
+    togglePasswordVisibility(
+      elements.signupPasswordInput,
+      elements.signupPasswordInputToggleBtn
+    );
+  });
 
   // 保存された値があれば入力欄にセット
   if (savedValues.userName)
@@ -294,12 +307,24 @@ function createSignupForm() {
   );
   signupPasswordAreaTitle.textContent = 'パスワード';
 
+  const signupPasswordWrapper = createElementWithClasses(
+    'div',
+    'signupPasswordWrapper'
+  );
+
   const signupPasswordInput = createElementWithClasses(
     'input',
     'signupPasswordInput'
   );
   signupPasswordInput.type = 'password';
   signupPasswordInput.maxlength = '20';
+
+  const signupPasswordInputToggleBtn = createElementWithClasses(
+    'i',
+    'signupPasswordInputToggleBtn',
+    'fa-solid',
+    'fa-eye'
+  );
 
   const signupPasswordDiscription = createElementWithClasses(
     'p',
@@ -372,9 +397,16 @@ function createSignupForm() {
   signupPasswordArea.append(
     signupPasswordAreaTitle,
     signupPasswordInput,
+    signupPasswordWrapper,
     signupPasswordDiscription,
     passwordErrorContainer
   );
+
+  signupPasswordWrapper.append(
+    signupPasswordInput,
+    signupPasswordInputToggleBtn
+  );
+
   passwordErrorContainer.append(
     passwordRequired,
     passwordLengthInvalid,
@@ -392,6 +424,7 @@ function createSignupForm() {
     signupUserNameDiscription,
     signupUserIdDiscription,
     signupPasswordDiscription,
+    signupPasswordInputToggleBtn,
     userNameRequired,
     duplicateUserName,
     userIdRequired,
