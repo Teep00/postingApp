@@ -9,7 +9,7 @@ import {
   showError,
   resetAllErrors,
   errorMessage,
-} from '../utils/errorMessage.js';
+} from '../utils/errorProcess.js';
 import { createPostElement } from '../core/postManager.js';
 import { scrollToTop } from '../utils/scrollToTop.js';
 
@@ -90,6 +90,10 @@ export function handleSearch(search, showAll) {
     });
   });
 }
+
+// ------------------------------------------------------- //
+/*      共通処理の関数化                                      */
+// ------------------------------------------------------- //
 
 function loadAllPosts() {
   return fetch(`${BASE_URL}/posts`)

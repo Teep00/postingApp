@@ -1,12 +1,7 @@
 // インポート
 import { BASE_URL } from '../../baseURL.js';
 import { createPostElement } from '../core/postManager.js';
-import { createPostForm } from '../utils/domFactory.js';
-import {
-  showError,
-  resetAllErrors,
-  errorMessage,
-} from '../utils/errorMessage.js';
+import { createPostForm, preparePostData } from '../utils/domFactory.js';
 import { postsButtonVisibility } from '../utils/postView.js';
 import { scrollToTop } from '../utils/scrollToTop.js';
 
@@ -25,34 +20,21 @@ export function newPostCreate(newPostCreateBtn) {
       // デフォルトのフォーム送信を防止
       e.preventDefault();
 
-      // 以前のエラーメッセージをリセット
-      resetAllErrors(postForm);
+      // 共通処理の関数化
+      const result = preparePostData(
+        postForm,
+        newTitle,
+        newMainText,
+        postFormInBtn
+      );
 
-      // 入力値を取得
-      const title = newTitle.value;
-      const body = newMainText.value;
+      // バリデーション失敗時は処理を中断
+      if (!result) return;
 
-      // エラーフラグ
-      let hasError = false;
-
-      // タイトルと本文が空の場合はエラー
-      if (!title) {
-        showError(postForm, '.titleRequired', errorMessage.titleRequired);
-        hasError = true;
-      }
-      if (!body) {
-        showError(postForm, '.mainTextRequired', errorMessage.mainTextRequired);
-        hasError = true;
-      }
+      const { title, body } = result;
 
       // ランダムなIDを生成
       const id = Math.random().toString(36).slice(-8);
-
-      // エラーがある場合は送信しない
-      if (hasError) return;
-
-      // タイトルか本文が文字数制限を超えている場合は送信ボタンを無効化
-      if (postFormInBtn.disabled) return;
 
       // ログイン中のユーザー情報を取得
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));

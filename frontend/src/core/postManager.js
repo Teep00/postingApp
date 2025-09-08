@@ -3,6 +3,7 @@ import { BASE_URL } from '../../../baseURL.js';
 import { currentDate } from '../utils/time.js';
 import { handleDelete } from '../modules/delete.js';
 import { handleEdit } from '../modules/edit.js';
+import { handleReply, showReplyList } from '../modules/reply.js';
 import { handleLike } from '../modules/like.js';
 import { fadeInObserver } from '../utils/fadeInObserver.js';
 import { posts } from '../utils/domElementList.js';
@@ -61,7 +62,7 @@ export function createPostElement({
 
   const buttonContainer = createElementWithClasses('div', 'buttonContainer');
 
-  const likeEditArea = createElementWithClasses('div', 'likeEditArea');
+  const leftBtnArea = createElementWithClasses('div', 'leftBtnArea');
 
   const likeBtn = createElementWithClasses('button', 'likeButton');
   likeBtn.type = 'button';
@@ -90,12 +91,11 @@ export function createPostElement({
   editBtn.type = 'button';
   editBtn.textContent = '編集';
 
-  const replyBtn = createElementWithClasses('button', 'replyBtn');
-  replyBtn.type = 'button';
+  const reply = createElementWithClasses('div', 'reply');
 
-  const replyIcon = createElementWithClasses(
+  const replyBtn = createElementWithClasses(
     'i',
-    'reply',
+    'replyBtn',
     'fa-solid',
     'fa-reply'
   );
@@ -108,14 +108,27 @@ export function createPostElement({
     'isHidden'
   );
 
+  const showReply = createElementWithClasses('div', 'showReply');
+
+  const showReplyText = createElementWithClasses('p', 'showReplyText');
+
   const timeArea = createElementWithClasses('div', 'timeArea');
 
   // append処理
-  post.append(userInfo, titleEl, mainTextEl, buttonContainer, timeArea);
   userInfo.append(userNameEl);
-  buttonContainer.append(likeEditArea, deleteBtn);
-  likeEditArea.append(likeBtn, editBtn);
   likeBtn.append(heartIcon, likesValue, like);
+  reply.append(replyBtn);
+  leftBtnArea.append(likeBtn, editBtn, reply);
+  buttonContainer.append(leftBtnArea, deleteBtn);
+  showReply.append(showReplyText);
+  post.append(
+    userInfo,
+    titleEl,
+    mainTextEl,
+    buttonContainer,
+    showReply,
+    timeArea
+  );
 
   const name = post.querySelector('.userName');
   name.textContent = userName;
@@ -145,10 +158,32 @@ export function createPostElement({
       body.length > 150 ? body.slice(0, 150) + '...' : body;
   })(title, body);
 
-  // 投稿削除・投稿編集・いいね機能
-  deleteBtn.addEventListener('click', () => handleDelete(post));
-  editBtn.addEventListener('click', () => handleEdit(post));
-  likeBtn.addEventListener('click', () => handleLike(post));
+  // いいね機能・投稿編集・投稿返信・返信欄表示・投稿削除
+  likeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleLike(post);
+  });
+  editBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleEdit(post);
+  });
+  replyBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleReply(post);
+  });
+  post.addEventListener('click', () => {
+    // 投稿のテキストがドラッグされている際、クリックイベントは発生しない
+    const selection = window.getSelection();
+    // 条件式 selecitonは古いバージョンの後方互換性のために記述
+    if (selection && selection.toString().length > 0) {
+      return;
+    }
+    showReplyList(post);
+  });
+  deleteBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleDelete(post);
+  });
 
   // 新しい投稿を先頭に追加
   posts.prepend(post);

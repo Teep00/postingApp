@@ -87,19 +87,27 @@ app.get('/posts/:userName/search', async (req, res) => {
 app.delete('/posts/:id', async (req, res) => {
   const postId = String(req.params.id);
 
-  const index = db.data.posts.findIndex((post) => sameId(post.id, postId));
-  if (index === -1)
-    return res.status(404).json({ error: '投稿が見つかりません' });
+  let postIndex = db.data.posts.findIndex((p) => sameId(p.id, postId));
+  let collection = 'posts';
 
-  db.data.users.forEach((user) => {
-    user.likedPosts = user.likedPosts.filter(
-      (likedId) => !sameId(likedId, postId)
-    );
+  if (postIndex === -1) {
+    postIndex = db.data.replies.findIndex((p) => sameId(p.id, postId));
+    collection = 'replies';
+  }
+
+  if (postIndex === -1) {
+    return res.status(404).json({ error: '投稿が見つかりません' });
+  }
+
+  db.data[collection].splice(postIndex, 1);
+
+  db.data.users.forEach((u) => {
+    u.likedPosts = u.likedPosts.filter((id) => !sameId(id, postId));
   });
 
-  const [deleted] = db.data.posts.splice(index, 1);
   await db.write();
-  res.status(200).json({ deletedId: deleted.id });
+
+  res.status(200).json({ message: '削除しました' });
 });
 
 // ------------------------------------------------------- //
@@ -107,13 +115,18 @@ app.delete('/posts/:id', async (req, res) => {
 // ------------------------------------------------------- //
 
 app.patch('/posts/:postId/like', async (req, res) => {
-  const postId = req.params.postId;
+  const postId = String(req.params.postId);
   const { userId } = req.body;
 
-  await db.read();
+  let post = db.data.posts.find((p) => sameId(p.id, postId));
+  let collection = 'posts';
 
-  const post = db.data.posts.find((p) => p.id === postId);
-  const user = db.data.users.find((u) => u.userId === userId);
+  if (!post) {
+    post = db.data.replies.find((p) => sameId(p.id, postId));
+    collection = 'replies';
+  }
+
+  const user = db.data.users.find((u) => sameId(u.userId, userId));
 
   if (!post || !user) {
     return res
@@ -147,22 +160,65 @@ app.patch('/posts/:postId/like', async (req, res) => {
 // ------------------------------------------------------- //
 
 app.patch('/posts/:id/edit', async (req, res) => {
-  const postId = req.params.id;
+  const postId = String(req.params.id);
   const { title, body } = req.body;
 
-  const editedPost = db.data.posts.find((post) => sameId(post.id, postId));
+  let post = db.data.posts.find((p) => sameId(p.id, postId));
+  let collection = 'posts';
 
-  if (!editedPost) {
+  if (!post) {
+    post = db.data.replies.find((p) => sameId(p.id, postId));
+    collection = 'replies';
+  }
+
+  if (!post) {
     return res.status(404).json({ error: '対象の投稿が見つかりません' });
   }
 
-  editedPost.title = title;
-  editedPost.body = body;
-  editedPost.edited = true;
+  post.title = title;
+  post.body = body;
+  post.edited = true;
 
   await db.write();
 
-  return res.json(editedPost);
+  return res.json(post);
+});
+
+// ------------------------------------------------------- //
+/*      投稿返信                                            */
+// ------------------------------------------------------- //
+
+app.post('/replies/reply', async (req, res) => {
+  const replyPost = req.body;
+  db.data.replies.push(replyPost);
+  await db.write();
+  res.json(replyPost);
+});
+
+// ------------------------------------------------------- //
+/*      返信一覧の表示                                       */
+// ------------------------------------------------------- //
+
+app.get('/replies/:id/showReplyList', async (req, res) => {
+  const postId = String(req.params.id);
+
+  let post = db.data.posts.find((p) => sameId(p.id, postId));
+  if (!post) {
+    const reply = db.data.replies.find((p) => sameId(p.id, postId));
+    if (reply) {
+      post = db.data.posts.find((p) => sameId(p.id, reply.replyTo));
+    }
+  }
+
+  if (!post) {
+    return res.status(404).json({ error: '対象の投稿が見つかりません' });
+  }
+
+  const replies = db.data.replies.filter((p) => sameId(p.replyTo, post.id));
+
+  await db.write();
+
+  res.json({ post, replies });
 });
 
 // ------------------------------------------------------- //

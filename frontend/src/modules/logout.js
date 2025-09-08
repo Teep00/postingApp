@@ -1,5 +1,5 @@
 // インポート
-import { myUserName } from '../utils/domElementList.js';
+import { myUserName, showAll } from '../utils/domElementList.js';
 import { showCenterToast } from '../utils/toast.js';
 import { postsButtonVisibility } from '../utils/postView.js';
 import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
@@ -15,5 +15,6 @@ export function handleLogout(logoutBtn) {
     myUserName.textContent = '';
     showCenterToast('ログアウトしました');
     postsButtonVisibility(false);
+    showAll.click();
   });
 }

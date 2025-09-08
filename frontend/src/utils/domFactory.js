@@ -1,6 +1,11 @@
 // インポート
 import { createOverlayWithContent, clickedOverlay } from './overlay.js';
-import { showError, errorMessage } from './errorMessage.js';
+import {
+  showError,
+  resetAllErrors,
+  errorMessage,
+  upperLimit,
+} from './errorProcess.js';
 
 // ------------------------------------------------------- //
 /*      要素作成関数                                         */
@@ -178,56 +183,62 @@ function charLimit(elements) {
   const maxTitleLength = 30;
   const maxMainTextLength = 150;
 
-  // ------------------------------------------------------- //
-  /*      バリデーション関数                                    */
-  // ------------------------------------------------------- //
+  const titleTooLongMsg = errorMessage.mainTextTooLong;
+  const mainTextTooLongMsg = errorMessage.mainTextTooLong;
 
-  function validate() {
-    // 現在の文字数を取得
-    const titleLength = newTitle.value.length;
-    const mainTextLength = newMainText.value.length;
+  upperLimit({
+    inputText: newTitle,
+    textChar: titleChar,
+    maxLength: maxTitleLength,
+    errorContainer: titleErrorContainer,
+    charError: titleCharError,
+    errorMsg: titleTooLongMsg,
+    requiredError: titleRequiredError,
+    postFormInBtn: postFormInBtn,
+  });
 
-    // 文字数表示の更新
-    titleChar.textContent = `${titleLength} / ${maxTitleLength}`;
-    mainTextChar.textContent = `${mainTextLength} / ${maxMainTextLength}`;
+  upperLimit({
+    inputText: newMainText,
+    textChar: mainTextChar,
+    maxLength: maxMainTextLength,
+    errorContainer: mainTextErrorContainer,
+    charError: mainTextCharError,
+    errorMsg: mainTextTooLongMsg,
+    requiredError: mainTextRequiredError,
+    postFormInBtn: postFormInBtn,
+  });
+}
+export function preparePostData(
+  postForm,
+  newTitle,
+  newMainText,
+  postFormInBtn
+) {
+  // 以前のエラーメッセージをリセット
+  resetAllErrors(postForm);
 
-    // 文字数オーバーの判定
-    const isTitleTooLong = titleLength > maxTitleLength;
-    const isMainTextTooLong = mainTextLength > maxMainTextLength;
+  // 入力値を取得
+  const title = newTitle.value;
+  const body = newMainText.value;
 
-    // エラーメッセージの表示・非表示
-    if (isTitleTooLong) {
-      showError(
-        titleErrorContainer,
-        '.titleCharError',
-        errorMessage.titleTooLong
-      );
-    } else {
-      titleCharError.classList.add('isHidden');
-    }
-    if (isMainTextTooLong) {
-      showError(
-        mainTextErrorContainer,
-        '.mainTextCharError',
-        errorMessage.mainTextTooLong
-      );
-    } else {
-      mainTextCharError.classList.add('isHidden');
-    }
+  // エラーフラグ
+  let hasError = false;
 
-    // 入力があったらエラーメッセージを非表示にする処理
-    if (newTitle.value) {
-      titleRequiredError.classList.add('isHidden');
-    }
-    if (newMainText.value) {
-      mainTextRequiredError.classList.add('isHidden');
-    }
-
-    postFormInBtn.disabled = isTitleTooLong || isMainTextTooLong;
+  // タイトルと本文が空の場合はエラー
+  if (!title) {
+    showError(postForm, '.titleRequired', errorMessage.titleRequired);
+    hasError = true;
+  }
+  if (!body) {
+    showError(postForm, '.mainTextRequired', errorMessage.mainTextRequired);
+    hasError = true;
   }
 
-  newTitle.addEventListener('input', validate);
-  newMainText.addEventListener('input', validate);
+  // エラーがある場合は送信しない
+  if (hasError) return;
 
-  validate();
+  // タイトルか本文が文字数制限を超えている場合は送信ボタンを無効化
+  if (postFormInBtn.disabled) return;
+
+  return { title, body };
 }

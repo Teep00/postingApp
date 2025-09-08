@@ -1,7 +1,7 @@
 // インポート
 import { BASE_URL } from '../../baseURL.js';
 import { createPostForm } from '../utils/domFactory.js';
-import { resetAllErrors } from '../utils/errorMessage.js';
+import { resetAllErrors } from '../utils/errorProcess.js';
 
 // ------------------------------------------------------- //
 /*      投稿編集関数                                         */

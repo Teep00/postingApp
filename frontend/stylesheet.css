@@ -249,7 +249,7 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 30px 60px;
+  padding: 20px 60px;
   background-color: rgb(25, 25, 25);
   box-shadow: 0 5px 15px 0 rgb(255, 255, 255);
 }
@@ -284,14 +284,18 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 120px 0;
 }
 
 .post {
   display: flex;
   flex-direction: column;
-  width: 350px;
-  margin: 250px 0;
-  padding: 70px 110px;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 450px;
+  margin: 40px 0;
+  padding: 50px 90px;
   background-color: rgb(20, 20, 20);
   box-shadow: 1px 0 11px 0 rgb(165, 165, 165);
   opacity: 0;
@@ -313,6 +317,11 @@ button {
   border-top: 10px solid rgb(235, 235, 235);
   border-bottom: 10px solid rgb(235, 235, 235);
   border-radius: 48%;
+  transition: 0.6s;
+}
+
+.box:hover {
+  box-shadow: 1px 0 11px 7px rgb(165, 165, 165);
 }
 
 /* -------- ユーザーネーム・ユーザーID -------- */
@@ -330,7 +339,12 @@ button {
 }
 
 /* -------- タイトル・メインテキスト -------- */
-
+.userName,
+.title,
+.mainText {
+  width: 400px;
+  text-align: center;
+}
 .title,
 .mainText {
   overflow-wrap: break-word;
@@ -361,8 +375,10 @@ button {
   margin-top: 10px;
 }
 
-.likeEditArea {
+.leftBtnArea {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* -------- いいねボタン -------- */
@@ -371,13 +387,18 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  width: 80px;
   height: 45px;
+  padding: 0;
   background-color: rgb(195, 195, 195);
   border-radius: 10%;
   color: rgb(0, 0, 0);
   font-weight: 500;
   transition: 0.5s;
+}
+
+.likeButton:hover {
+  background-color: rgb(126, 126, 126);
 }
 
 .heartIcon {
@@ -388,11 +409,7 @@ button {
   transition: 0.3s;
 }
 
-.likeButton:hover .heartIcon {
-  color: rgb(245, 51, 84);
-  opacity: 0.9;
-}
-
+.likeButton:hover .heartIcon,
 .liked {
   color: rgb(245, 51, 84);
   opacity: 0.9;
@@ -406,13 +423,72 @@ button {
 .heartIcon.like {
   margin: 0;
 }
+/* -------- 返信ボタン -------- */
 
-/* -------- 編集・削除ボタン -------- */
+.reply {
+  padding: 0 15px;
+}
 
-.deleteButton,
-.editButton {
-  width: 70px;
-  height: 45px;
+.replyBtn {
+  color: rgb(195, 195, 195);
+  font-size: 30px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.replyBtn:hover {
+  color: rgba(48, 187, 10, 0.707);
+}
+
+/* -------- 返信欄 -------- */
+
+.replyPost {
+  position: fixed;
+  top: 60px;
+  left: 10px;
+  width: 270px;
+  height: 270px;
+  margin: 20px auto;
+  padding: 40px 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(20, 20, 20);
+  border-top: 10px solid rgb(235, 235, 235);
+  border-bottom: 10px solid rgb(235, 235, 235);
+  border-radius: 48%;
+  box-shadow: 1px 0 11px 0 rgb(165, 165, 165);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  z-index: 100;
+}
+.replyPost.visible {
+  opacity: 0.5;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+.replyUserName,
+.replyTitle,
+.replyBody {
+  width: 270px;
+  margin-top: 0;
+  margin-bottom: 18px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+}
+
+.replyUserName {
+  font-size: 18px;
+}
+.replyTitle {
+  font-size: 15px;
+}
+.replyBody {
+  font-size: 14px;
 }
 
 /* -------- 編集ボタン -------- */
@@ -428,10 +504,17 @@ button {
 }
 
 .editButton {
+  width: 80px;
+  height: 45px;
   background-color: rgb(195, 195, 195);
   border-radius: 10%;
   color: rgb(0, 0, 0);
   font-weight: 500;
+  transition: 0.5s;
+}
+
+.editButton:hover {
+  background-color: rgb(126, 126, 126);
 }
 
 .editTitle,
@@ -450,13 +533,15 @@ button {
 /* -------- 削除ボタン -------- */
 
 .deleteButton {
-  width: 21.88px;
-  height: 26px;
-  font-size: 25px;
-  color: #494949;
+  font-size: 30px;
+  color: rgb(70, 70, 70);
   cursor: pointer;
+  transition: 0.5s;
 }
 
+.deleteButton:hover {
+  color: #ba1717;
+}
 /* -------- 投稿時間 -------- */
 
 .timeArea {

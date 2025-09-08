@@ -8,7 +8,8 @@ import {
   showError,
   resetAllErrors,
   errorMessage,
-} from '../utils/errorMessage.js';
+  upperLimit,
+} from '../utils/errorProcess.js';
 import { loginBtn } from '../utils/domElementList.js';
 import { togglePasswordVisibility } from '../utils/togglePasswordVisibility.js';
 

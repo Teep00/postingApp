@@ -7,7 +7,6 @@ import { createConfirmDialog } from '../utils/confirmDialog.js';
 // ------------------------------------------------------- //
 
 export function handleDelete(postElement) {
-  const deleteBtn = postElement.querySelector('.deleteButton');
   createConfirmDialog({
     mainMessage: '本当に削除しますか？',
     affirmMessage: '削除',

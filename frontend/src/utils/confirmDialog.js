@@ -1,5 +1,5 @@
 // インポート
-import { createOverlayWithContent } from './overlay.js';
+import { createOverlayWithContent, clickedOverlay } from './overlay.js';
 
 // ------------------------------------------------------- //
 /*      確認画面表示関数                                      */
@@ -8,6 +8,7 @@ import { createOverlayWithContent } from './overlay.js';
 export function createConfirmDialog({
   mainMessage = '確認',
   affirmMessage = 'OK',
+  denyMessage = 'キャンセル',
   clickYesBtn = () => {},
   clickNoBtn = () => {},
 }) {
@@ -17,7 +18,7 @@ export function createConfirmDialog({
   confirmBox.innerHTML = `
   <p>${mainMessage}</p>
   <div class="confirmButtons">
-    <button class="noButton">キャンセル</button>
+    <button class="noButton">${denyMessage}</button>
     <button class="yesButton">${affirmMessage}</button>
   </div>
   `;
@@ -35,5 +36,6 @@ export function createConfirmDialog({
     clickNoBtn();
   });
 
+  clickedOverlay(confirmBox, overlayElement);
   return overlayElement;
 }

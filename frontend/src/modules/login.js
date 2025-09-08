@@ -8,7 +8,7 @@ import {
   showError,
   resetAllErrors,
   errorMessage,
-} from '../utils/errorMessage.js';
+} from '../utils/errorProcess.js';
 import { postsButtonVisibility } from '../utils/postView.js';
 import { likeButtonDisabled } from '../utils/likeButtonDisabled.js';
 import { togglePasswordVisibility } from '../utils/togglePasswordVisibility.js';
